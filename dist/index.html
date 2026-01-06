@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title data-i18n="title">小红书笔记提取-推送配置</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: #fff;
+      min-height: 100vh;
+      padding: 20px;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, #ffeef2 0%, #ffe4e8 50%, #fff0f5 100%);
+      z-index: -1;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 4px 20px rgba(255, 105, 180, 0.08);
+      border: 1px solid rgba(255, 105, 180, 0.05);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .title {
+      font-size: 28px;
+      font-weight: 600;
+      color: #ff2442;
+      margin-bottom: 8px;
+      position: relative;
+      display: inline-block;
+    }
+
+    .title::before {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 10%;
+      right: 10%;
+      height: 3px;
+      background: linear-gradient(90deg, #ff2442 0%, #ff6b6b 100%);
+      border-radius: 2px;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: #999;
+      margin-top: 12px;
+    }
+
+    /* 用户信息样式 */
+    #userInfo {
+      background: linear-gradient(135deg, #fff5f7 0%, #ffeef0 100%);
+      padding: 16px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 107, 107, 0.2);
+      margin-bottom: 24px;
+    }
+
+    /* 表格列表样式 */
+    .table-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .table-item {
+      background: #ffffff;
+      border: 2px solid #f0f0f0;
+      border-radius: 12px;
+      padding: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .table-item:hover {
+      border-color: #ff6b6b;
+      box-shadow: 0 4px 12px rgba(255, 107, 107, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .table-item.bound {
+      border-color: #52c41a;
+      background: linear-gradient(135deg, #f0fff4 0%, #e8f5e9 100%);
+    }
+
+    .table-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .table-name {
+      font-size: 18px;
+      font-weight: 600;
+      color: #333;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .table-id {
+      font-size: 12px;
+      color: #666;
+      font-family: 'Courier New', monospace;
+      background: #f5f5f5;
+      padding: 4px 8px;
+      border-radius: 6px;
+    }
+
+    .bind-status {
+      font-size: 12px;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-weight: 500;
+    }
+
+    .bind-status.unbound {
+      background: #fff1f0;
+      color: #ff4d4f;
+      border: 1px solid #ff4d4f;
+    }
+
+    .bind-status.bound {
+      background: #f0fff4;
+      color: #52c41a;
+      border: 1px solid #52c41a;
+    }
+
+    .table-info {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 12px;
+      font-size: 13px;
+      color: #666;
+    }
+
+    .info-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .info-label {
+      font-weight: 500;
+      color: #999;
+    }
+
+    .info-value {
+      color: #333;
+      font-family: 'Courier New', monospace;
+    }
+
+    /* 按钮样式 */
+    .button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .button-primary {
+      background: linear-gradient(135deg, #ff2442 0%, #ff6b6b 100%);
+      color: white;
+      box-shadow: 0 2px 8px rgba(255, 36, 66, 0.3);
+    }
+
+    .button-primary:hover {
+      box-shadow: 0 4px 15px rgba(255, 36, 66, 0.4);
+      transform: translateY(-1px);
+    }
+
+    .button-secondary {
+      background: #fff;
+      color: #ff2442;
+      border: 2px solid #ff2442;
+    }
+
+    .button-secondary:hover {
+      background: #ff2442;
+      color: white;
+    }
+
+    .button-small {
+      padding: 6px 12px;
+      font-size: 13px;
+    }
+
+    /* 模态框样式 */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 10000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      max-width: 500px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .modal-header {
+      font-size: 20px;
+      font-weight: 600;
+      color: #ff2442;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: none;
+      border: none;
+      font-size: 24px;
+      color: #999;
+      cursor: pointer;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+    }
+
+    .modal-close:hover {
+      background: #f0f0f0;
+      color: #333;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: #333;
+      margin-bottom: 8px;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #f0f0f0;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #ff2442;
+      box-shadow: 0 0 0 3px rgba(255, 36, 66, 0.1);
+    }
+
+    .form-hint {
+      font-size: 12px;
+      color: #999;
+      margin-top: 6px;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .modal-actions .button {
+      flex: 1;
+      justify-content: center;
+    }
+
+    /* 状态消息 */
+    .status {
+      margin-top: 20px;
+      padding: 16px;
+      border-radius: 12px;
+      font-size: 14px;
+      text-align: center;
+      display: none;
+      font-weight: 500;
+    }
+
+    .status.processing {
+      background: linear-gradient(135deg, #fff5f7 0%, #ffeef0 100%);
+      color: #ff2442;
+      border: 1px solid #ff2442;
+      display: block;
+    }
+
+    .status.success {
+      background: linear-gradient(135deg, #f0fff4 0%, #e8f5e9 100%);
+      color: #52c41a;
+      border: 1px solid #52c41a;
+      display: block;
+    }
+
+    .status.error {
+      background: linear-gradient(135deg, #fff1f0 0%, #ffebe8 100%);
+      color: #ff4d4f;
+      border: 1px solid #ff4d4f;
+      display: block;
+    }
+
+    /* 加载动画 */
+    #loadingOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      visibility: hidden;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+
+    #loadingOverlay.active {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .spinner {
+      width: 60px;
+      height: 60px;
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #ff2442;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+
+    /* 空状态 */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #999;
+    }
+
+    .empty-state svg {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+
+    /* 语言切换按钮 */
+    .language-toggle {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      z-index: 1000;
+    }
+
+    .language-toggle button {
+      padding: 12px 20px;
+      background: white;
+      color: #ff2442;
+      border: 2px solid #ff2442;
+      border-radius: 25px;
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: 0 4px 15px rgba(255, 36, 66, 0.2);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .language-toggle button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 36, 66, 0.3);
+    }
+
+    /* 右下角悬浮按钮 - 缩小并靠边 */
+    .floating-buttons {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .floating-buttons a {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      box-shadow: 0 2px 8px rgba(255, 36, 66, 0.15);
+      transition: all 0.3s ease;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .floating-buttons a:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(255, 36, 66, 0.25);
+    }
+
+    .floating-buttons .primary {
+      background: linear-gradient(135deg, #ff2442 0%, #ff6b6b 100%);
+      color: white;
+    }
+
+    .floating-buttons .secondary {
+      background: white;
+      color: #ff2442;
+      border: 1.5px solid #ff2442;
+    }
+
+    .floating-buttons svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    /* 消息提示 Toast */
+    .toast-container {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10001;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      pointer-events: none;
+    }
+
+    .toast {
+      min-width: 300px;
+      max-width: 500px;
+      padding: 16px 20px;
+      border-radius: 12px;
+      background: white;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      animation: slideDown 0.3s ease;
+      pointer-events: auto;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      to {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+    }
+
+    .toast.hiding {
+      animation: slideUp 0.3s ease forwards;
+    }
+
+    .toast-icon {
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+    }
+
+    .toast.info .toast-icon {
+      background: #e6f7ff;
+      color: #1890ff;
+    }
+
+    .toast.success .toast-icon {
+      background: #f0fff4;
+      color: #52c41a;
+    }
+
+    .toast.warning .toast-icon {
+      background: #fffbe6;
+      color: #faad14;
+    }
+
+    .toast.error .toast-icon {
+      background: #fff1f0;
+      color: #ff4d4f;
+    }
+
+    .toast.loading .toast-icon {
+      background: #f0f0f0;
+      color: #999;
+    }
+
+    .toast.loading .toast-icon svg {
+      animation: spin 1s linear infinite;
+    }
+
+    .toast-message {
+      flex: 1;
+      font-size: 14px;
+      color: #333;
+      word-break: break-word;
+    }
+
+    /* 字段展示区域样式 */
+    .fields-showcase {
+      background: linear-gradient(135deg, #f8f9fa 0%, #f0f2f5 100%);
+      padding: 20px;
+      border-radius: 12px;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      margin-bottom: 24px;
+    }
+
+    .fields-showcase-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .fields-showcase-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .fields-showcase-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 10px;
+    }
+
+    .field-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: #fff;
+      border-radius: 8px;
+      border: 1px solid #e8e8e8;
+      transition: all 0.2s ease;
+    }
+
+    .field-item:hover {
+      border-color: #ff6b6b;
+      box-shadow: 0 2px 8px rgba(255, 107, 107, 0.1);
+    }
+
+    .field-checkbox {
+      width: 18px;
+      height: 18px;
+      cursor: not-allowed;
+      position: relative;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      border: 2px solid #ff2442;
+      border-radius: 4px;
+      background: #fff;
+      flex-shrink: 0;
+    }
+
+    .field-checkbox:checked {
+      background: #ff2442;
+    }
+
+    .field-checkbox:checked::after {
+      content: '';
+      position: absolute;
+      left: 5px;
+      top: 1px;
+      width: 5px;
+      height: 10px;
+      border: solid white;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+
+    .field-checkbox:disabled {
+      opacity: 1;
+    }
+
+    .field-checkbox:disabled:checked {
+      background: #ff2442;
+      border-color: #ff2442;
+    }
+
+    .field-label {
+      font-size: 13px;
+      color: #333;
+      user-select: none;
+    }
+  </style>
+  <script type="module" crossorigin src="./assets/index.0bf7d199.js"></script>
+  <link rel="modulepreload" crossorigin href="./assets/vendor-lark.79f3ba62.js">
+  <link rel="modulepreload" crossorigin href="./assets/vendor-jquery.88f4ff12.js">
+  <link rel="modulepreload" crossorigin href="./assets/vendor-i18n.7cd67a60.js">
+</head>
+
+<body>
+  <div class="container">
+    <div class="header">
+      <h1 class="title" data-i18n="title">小红书笔记提取-推送配置</h1>
+      <p class="subtitle" data-i18n="subtitle">绑定数据表与小红书账号，自动化数据采集</p>
+    </div>
+
+    <!-- 获取字段展示 -->
+    <div class="fields-showcase">
+      <div class="fields-showcase-header">
+        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+        </svg>
+        <span class="fields-showcase-title">可获取字段</span>
+      </div>
+      <div class="fields-showcase-grid">
+        <div class="field-item">
+          <input type="checkbox" class="field-checkbox" checked disabled>
+          <span class="field-label">作者昵称</span>
+        </div>
+        <div class="field-item">
+          <input type="checkbox" class="field-checkbox" checked disabled>
+          <span class="field-label">作者小红书号</span>
+        </div>
+        <div class="field-item">
+          <input type="checkbox" class="field-checkbox" checked disabled>
+          <span class="field-label">作者主页链接</span>
+        </div>
+        <div class="field-item">
+          <input type="checkbox" class="field-checkbox" checked disabled>
+          <span class="field-label">作者粉丝数</span>
+        </div>
+        <div class="field-item">
+          <input type="checkbox" class="field-checkbox" checked disabled>
+          <span class="field-label">作者简介</span>
+        </div>
+        <div class="field-item">
+          <input type="checkbox" class="field-checkbox" checked disabled>
+          <span class="field-label">笔记标题</span>
+        </div>
+        <div class="field-item">
+          <input type="checkbox" class="field-checkbox" checked disabled>
+          <span class="field-label">笔记内容</span>
+        </div>
+        <div class="field-item">
+          <input type="checkbox" class="field-checkbox" checked disabled>
+          <span class="field-label">笔记类型</span>
+        </div>
+        <div class="field-item">
+          <input type="checkbox" class="field-checkbox" checked disabled>
+          <span class="field-label">发布时间</span>
+        </div>
+        <div class="field-item">
+          <input type="checkbox" class="field-checkbox" checked disabled>
+          <span class="field-label">封面图</span>
+        </div>
+        <div class="field-item">
+          <input type="checkbox" class="field-checkbox" checked disabled>
+          <span class="field-label">图片列表</span>
+        </div>
+        <div class="field-item">
+          <input type="checkbox" class="field-checkbox" checked disabled>
+          <span class="field-label">视频地址</span>
+        </div>
+        <div class="field-item">
+          <input type="checkbox" class="field-checkbox" checked disabled>
+          <span class="field-label">视频时长</span>
+        </div>
+        <div class="field-item">
+          <input type="checkbox" class="field-checkbox" checked disabled>
+          <span class="field-label">视频字幕</span>
+        </div>
+        <div class="field-item">
+          <input type="checkbox" class="field-checkbox" checked disabled>
+          <span class="field-label">视频文本</span>
+        </div>
+        <div class="field-item">
+          <input type="checkbox" class="field-checkbox" checked disabled>
+          <span class="field-label">话题标签</span>
+        </div>
+        <div class="field-item">
+          <input type="checkbox" class="field-checkbox" checked disabled>
+          <span class="field-label">点赞数</span>
+        </div>
+        <div class="field-item">
+          <input type="checkbox" class="field-checkbox" checked disabled>
+          <span class="field-label">收藏数</span>
+        </div>
+        <div class="field-item">
+          <input type="checkbox" class="field-checkbox" checked disabled>
+          <span class="field-label">转发数</span>
+        </div>
+        <div class="field-item">
+          <input type="checkbox" class="field-checkbox" checked disabled>
+          <span class="field-label">评论数</span>
+        </div>
+        <div class="field-item">
+          <input type="checkbox" class="field-checkbox" checked disabled>
+          <span class="field-label">发文地址</span>
+        </div>
+        <div class="field-item">
+          <input type="checkbox" class="field-checkbox" checked disabled>
+          <span class="field-label">数据获取时间</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 用户信息 -->
+    <div id="userInfo" style="display: none;">
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px;">
+        <div style="flex: 1; min-width: 0;">
+          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+            <div>
+              <div style="font-size: 12px; color: #999; margin-bottom: 4px;" data-i18n="userInfo.userName">用户名</div>
+              <div id="userName" style="font-size: 16px; font-weight: 600; color: #333;">-</div>
+            </div>
+            <div>
+              <div style="font-size: 12px; color: #999; margin-bottom: 4px;" data-i18n="userInfo.userId">用户ID</div>
+              <div id="userId" style="font-size: 16px; font-weight: 600; color: #333;">-</div>
+            </div>
+            <div>
+              <div style="font-size: 12px; color: #999; margin-bottom: 4px;" data-i18n="userInfo.vipLevel">VIP等级</div>
+              <div id="vipLevelName" style="font-size: 16px; font-weight: 600; color: #ff2442;">-</div>
+            </div>
+            <div>
+              <div style="font-size: 12px; color: #999; margin-bottom: 4px;" data-i18n="userInfo.remainDownloads">可下载次数</div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <div id="remainDownloads" style="font-size: 16px; font-weight: 600; color: #52c41a;">-</div>
+                <button id="rechargeDownloadsBtn" class="button button-primary button-small" style="padding: 4px 10px; font-size: 12px;" data-i18n="buttons.renew">续费</button>
+              </div>
+            </div>
+          </div>
+          <div id="vipExpireInfo" style="font-size: 12px; color: #666; margin-top: 8px; display: none;">
+            <span data-i18n="userInfo.expireTime">到期时间</span>: <span id="vipExpireTime" style="color: #ff2442; font-weight: 500;">-</span>
+          </div>
+        </div>
+        <div style="width: 1px; height: 60px; background: rgba(255, 107, 107, 0.2); flex-shrink: 0;"></div>
+        <div style="display: flex; gap: 8px; flex-shrink: 0;">
+          <button id="refreshUserInfo" class="button button-secondary button-small" data-i18n="buttons.refresh">刷新</button>
+          <button id="rechargeBtn" class="button button-primary button-small" data-i18n="buttons.activate">开通</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 表格列表 -->
+    <div id="tableListContainer">
+      <h2 style="font-size: 20px; font-weight: 600; color: #333; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+        <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+        </svg>
+        <span data-i18n="tableList.title">数据表列表</span>
+      </h2>
+      <div id="tableList" class="table-list">
+        <!-- 表格列表将动态生成 -->
+      </div>
+    </div>
+
+    <div id="status" class="status"></div>
+
+    <!-- 免责声明 -->
+    <div style="margin-top: 32px; padding: 20px; background: linear-gradient(135deg, #fff5f7 0%, #ffeef0 100%); border-radius: 12px; border: 1px solid rgba(255, 107, 107, 0.2);">
+      <h3 style="font-size: 16px; font-weight: 600; color: #ff2442; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <span data-i18n="disclaimer.title">免责声明</span>
+      </h3>
+      <div style="font-size: 13px; color: #666; line-height: 1.8; white-space: pre-line;" data-i18n="disclaimer.content">
+        1. 本插件仅用于个人学习和研究目的,不得用于任何商业用途。<br>
+        2. 用户使用本插件采集的数据,应遵守小红书平台的相关规定和用户协议。<br>
+        3. 本插件不对采集内容的准确性、完整性和及时性承担责任。<br>
+        4. 用户应妥善保管账号信息,因账号泄露造成的损失由用户自行承担。<br>
+        5. 本插件尊重第三方知识产权,如涉及侵权请联系删除。<br>
+        6. 使用本插件即表示您同意本声明的所有条款,如有异议请立即停止使用。
+      </div>
+    </div>
+  </div>
+
+  <!-- 绑定模态框 -->
+  <div id="bindModal" class="modal-overlay">
+    <div class="modal" style="position: relative;">
+      <button class="modal-close" onclick="closeBindModal()">&times;</button>
+      <div class="modal-header">
+        <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+        </svg>
+        <span id="modalTitle" data-i18n="modal.bindTitle">绑定小红书账号</span>
+      </div>
+      <form id="bindForm">
+        <input type="hidden" id="bindAppToken">
+        <input type="hidden" id="bindTableId">
+        <input type="hidden" id="bindTableName">
+
+        <div class="form-group">
+          <label data-i18n="modal.tableName">表格名称</label>
+          <input type="text" id="tableNameDisplay" disabled style="background: #f5f5f5;">
+        </div>
+
+        <div class="form-group">
+          <label data-i18n="modal.personalBaseToken">Personal Base Token</label>
+          <input type="text" id="personalBaseToken" placeholder="请输入Personal Base Token" required>
+          <div class="form-hint" data-i18n="modal.personalBaseTokenHint">每个多维表格一个唯一标识</div>
+        </div>
+
+        <div class="form-group">
+          <label data-i18n="modal.xhsUrl">小红书绑定(绑定后支持手机客户端推送)</label>
+          <input type="text" id="xhsUrl" placeholder="https://www.xiaohongshu.com/user/profile/... 或直接输入24位ID">
+          <div class="form-hint" data-i18n="modal.xhsUrlHint">支持 xiaohongshu.com 或 xhslink.com 链接，或直接输入24位小红书ID</div>
+        </div>
+
+        <div class="form-group">
+          <label data-i18n="modal.remark">备注（可选）</label>
+          <input type="text" id="remark" placeholder="请输入备注信息">
+        </div>
+
+        <div class="form-group" style="background: #f5f5f5; padding: 12px; border-radius: 8px;">
+          <div style="font-size: 12px; color: #666;">
+            <div><strong data-i18n="modal.extractedInfo">提取信息</strong>:</div>
+            <div style="margin-top: 8px;">
+              <span data-i18n="modal.appToken">App Token</span>: <span id="displayAppToken" style="font-family: monospace; color: #ff2442;">-</span>
+            </div>
+            <div style="margin-top: 4px;">
+              <span data-i18n="modal.tableId">Table ID</span>: <span id="displayTableId" style="font-family: monospace; color: #ff2442;">-</span>
+            </div>
+            <div style="margin-top: 4px;">
+              <span data-i18n="modal.xhsId">XHS ID</span>: <span id="displayXhsId" style="font-family: monospace; color: #ff2442;">-</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="button button-secondary" onclick="closeBindModal()" data-i18n="buttons.cancel">取消</button>
+          <button type="submit" class="button button-primary" data-i18n="buttons.save">保存</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 加载动画 -->
+  <div id="loadingOverlay">
+    <div style="text-align: center;">
+      <div class="spinner"></div>
+      <div style="color: #ff2442; font-size: 16px; font-weight: 500;" data-i18n="loading.verifying">正在验证授权...</div>
+    </div>
+  </div>
+
+  <!-- 语言切换按钮 -->
+  <div class="language-toggle">
+    <button id="languageToggle">
+      <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"></path>
+      </svg>
+      <span id="currentLanguage">中文</span>
+    </button>
+  </div>
+
+  <!-- 右下角悬浮按钮 -->
+  <div class="floating-buttons">
+    <a href="https://applink.feishu.cn/client/chat/chatter/add_by_link?link_token=7bcr4ca7-7641-4cca-841f-dc775146b9fc"
+       target="_blank"
+       class="primary">
+      <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+      </svg>
+      <span data-i18n="buttons.chatGroup">交流群</span>
+    </a>
+    <a href="https://www.feishu.cn/invitation/page/add_contact/?token=45eve26c-d66e-49c6-865d-901b170ddf58&unique_id=Jp3RoBgHNMTqhqpBevBUaQ=="
+       target="_blank"
+       class="secondary">
+      <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path>
+      </svg>
+      <span data-i18n="buttons.support">技术支持</span>
+    </a>
+  </div>
+
+  <!-- Toast 容器 -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  
+</body>
+
+</html>
