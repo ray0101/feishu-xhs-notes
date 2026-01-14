@@ -261,23 +261,26 @@
       position: absolute;
       top: 16px;
       right: 16px;
-      background: none;
-      border: none;
+      background: #f5f5f5;
+      border: 1px solid #d9d9d9;
       font-size: 24px;
-      color: #999;
+      color: #666;
       cursor: pointer;
-      width: 32px;
-      height: 32px;
+      width: 36px;
+      height: 36px;
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 50%;
-      transition: all 0.3s ease;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+      font-weight: bold;
     }
 
     .modal-close:hover {
-      background: #f0f0f0;
+      background: #e8e8e8;
       color: #333;
+      border-color: #b8b8b8;
+      transform: scale(1.05);
     }
 
     .form-group {
@@ -621,17 +624,20 @@
       border-radius: 8px;
       border: 1px solid #e8e8e8;
       transition: all 0.2s ease;
+      cursor: pointer;
+      user-select: none;
     }
 
     .field-item:hover {
       border-color: #ff6b6b;
       box-shadow: 0 2px 8px rgba(255, 107, 107, 0.1);
+      transform: translateY(-1px);
     }
 
     .field-checkbox {
       width: 18px;
       height: 18px;
-      cursor: not-allowed;
+      cursor: pointer;
       position: relative;
       appearance: none;
       -webkit-appearance: none;
@@ -640,6 +646,7 @@
       border-radius: 4px;
       background: #fff;
       flex-shrink: 0;
+      pointer-events: none;
     }
 
     .field-checkbox:checked {
@@ -668,13 +675,49 @@
     }
 
     .field-label {
+      flex: 1;
+      cursor: pointer;
+      user-select: none;
+      font-size: 14px;
+      color: #333;
+    }
+
+    /* 模态框中的字段复选框样式 */
+    .field-checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 8px;
+      background: #fff;
+      border-radius: 4px;
+      border: 1px solid #f0f0f0;
+      transition: all 0.2s ease;
+    }
+
+    .field-checkbox-item:hover {
+      border-color: #ff6b6b;
+      background: #fff5f7;
+    }
+
+    .field-checkbox-item input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .field-checkbox-item label {
       font-size: 13px;
       color: #333;
+      cursor: pointer;
       user-select: none;
+      flex: 1;
+      margin: 0;
     }
   </style>
-  <script type="module" crossorigin src="./assets/index.0bf7d199.js"></script>
-  <link rel="modulepreload" crossorigin href="./assets/vendor-lark.79f3ba62.js">
+  
+  <script type="module" crossorigin src="./assets/index.eda353dd.js"></script>
+  <link rel="modulepreload" crossorigin href="./assets/vendor-lark.9e248cc2.js">
   <link rel="modulepreload" crossorigin href="./assets/vendor-jquery.88f4ff12.js">
   <link rel="modulepreload" crossorigin href="./assets/vendor-i18n.7cd67a60.js">
 </head>
@@ -686,154 +729,199 @@
       <p class="subtitle" data-i18n="subtitle">绑定数据表与小红书账号，自动化数据采集</p>
     </div>
 
-    <!-- 获取字段展示 -->
-    <div class="fields-showcase">
-      <div class="fields-showcase-header">
-        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
-        </svg>
-        <span class="fields-showcase-title">可获取字段</span>
-      </div>
-      <div class="fields-showcase-grid">
-        <div class="field-item">
-          <input type="checkbox" class="field-checkbox" checked disabled>
-          <span class="field-label">作者昵称</span>
-        </div>
-        <div class="field-item">
-          <input type="checkbox" class="field-checkbox" checked disabled>
-          <span class="field-label">作者小红书号</span>
-        </div>
-        <div class="field-item">
-          <input type="checkbox" class="field-checkbox" checked disabled>
-          <span class="field-label">作者主页链接</span>
-        </div>
-        <div class="field-item">
-          <input type="checkbox" class="field-checkbox" checked disabled>
-          <span class="field-label">作者粉丝数</span>
-        </div>
-        <div class="field-item">
-          <input type="checkbox" class="field-checkbox" checked disabled>
-          <span class="field-label">作者简介</span>
-        </div>
-        <div class="field-item">
-          <input type="checkbox" class="field-checkbox" checked disabled>
-          <span class="field-label">笔记标题</span>
-        </div>
-        <div class="field-item">
-          <input type="checkbox" class="field-checkbox" checked disabled>
-          <span class="field-label">笔记内容</span>
-        </div>
-        <div class="field-item">
-          <input type="checkbox" class="field-checkbox" checked disabled>
-          <span class="field-label">笔记类型</span>
-        </div>
-        <div class="field-item">
-          <input type="checkbox" class="field-checkbox" checked disabled>
-          <span class="field-label">发布时间</span>
-        </div>
-        <div class="field-item">
-          <input type="checkbox" class="field-checkbox" checked disabled>
-          <span class="field-label">封面图</span>
-        </div>
-        <div class="field-item">
-          <input type="checkbox" class="field-checkbox" checked disabled>
-          <span class="field-label">图片列表</span>
-        </div>
-        <div class="field-item">
-          <input type="checkbox" class="field-checkbox" checked disabled>
-          <span class="field-label">视频地址</span>
-        </div>
-        <div class="field-item">
-          <input type="checkbox" class="field-checkbox" checked disabled>
-          <span class="field-label">视频时长</span>
-        </div>
-        <div class="field-item">
-          <input type="checkbox" class="field-checkbox" checked disabled>
-          <span class="field-label">视频字幕</span>
-        </div>
-        <div class="field-item">
-          <input type="checkbox" class="field-checkbox" checked disabled>
-          <span class="field-label">视频文本</span>
-        </div>
-        <div class="field-item">
-          <input type="checkbox" class="field-checkbox" checked disabled>
-          <span class="field-label">话题标签</span>
-        </div>
-        <div class="field-item">
-          <input type="checkbox" class="field-checkbox" checked disabled>
-          <span class="field-label">点赞数</span>
-        </div>
-        <div class="field-item">
-          <input type="checkbox" class="field-checkbox" checked disabled>
-          <span class="field-label">收藏数</span>
-        </div>
-        <div class="field-item">
-          <input type="checkbox" class="field-checkbox" checked disabled>
-          <span class="field-label">转发数</span>
-        </div>
-        <div class="field-item">
-          <input type="checkbox" class="field-checkbox" checked disabled>
-          <span class="field-label">评论数</span>
-        </div>
-        <div class="field-item">
-          <input type="checkbox" class="field-checkbox" checked disabled>
-          <span class="field-label">发文地址</span>
-        </div>
-        <div class="field-item">
-          <input type="checkbox" class="field-checkbox" checked disabled>
-          <span class="field-label">数据获取时间</span>
-        </div>
-      </div>
-    </div>
-
     <!-- 用户信息 -->
     <div id="userInfo" style="display: none;">
       <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px;">
         <div style="flex: 1; min-width: 0;">
-          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
-            <div>
-              <div style="font-size: 12px; color: #999; margin-bottom: 4px;" data-i18n="userInfo.userName">用户名</div>
-              <div id="userName" style="font-size: 16px; font-weight: 600; color: #333;">-</div>
-            </div>
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
             <div>
               <div style="font-size: 12px; color: #999; margin-bottom: 4px;" data-i18n="userInfo.userId">用户ID</div>
               <div id="userId" style="font-size: 16px; font-weight: 600; color: #333;">-</div>
             </div>
             <div>
-              <div style="font-size: 12px; color: #999; margin-bottom: 4px;" data-i18n="userInfo.vipLevel">VIP等级</div>
-              <div id="vipLevelName" style="font-size: 16px; font-weight: 600; color: #ff2442;">-</div>
-            </div>
-            <div>
               <div style="font-size: 12px; color: #999; margin-bottom: 4px;" data-i18n="userInfo.remainDownloads">可下载次数</div>
               <div style="display: flex; align-items: center; gap: 8px;">
-                <div id="remainDownloads" style="font-size: 16px; font-weight: 600; color: #52c41a;">-</div>
+                <div id="remainDownload" style="font-size: 16px; font-weight: 600; color: #52c41a;">-</div>
                 <button id="rechargeDownloadsBtn" class="button button-primary button-small" style="padding: 4px 10px; font-size: 12px;" data-i18n="buttons.renew">续费</button>
               </div>
             </div>
-          </div>
-          <div id="vipExpireInfo" style="font-size: 12px; color: #666; margin-top: 8px; display: none;">
-            <span data-i18n="userInfo.expireTime">到期时间</span>: <span id="vipExpireTime" style="color: #ff2442; font-weight: 500;">-</span>
+            <div>
+              <div style="font-size: 12px; color: #999; margin-bottom: 4px;" data-i18n="userInfo.boundTables">已绑定表格</div>
+              <div id="boundTableCount" style="font-size: 16px; font-weight: 600; color: #333;">-</div>
+            </div>
           </div>
         </div>
         <div style="width: 1px; height: 60px; background: rgba(255, 107, 107, 0.2); flex-shrink: 0;"></div>
         <div style="display: flex; gap: 8px; flex-shrink: 0;">
           <button id="refreshUserInfo" class="button button-secondary button-small" data-i18n="buttons.refresh">刷新</button>
-          <button id="rechargeBtn" class="button button-primary button-small" data-i18n="buttons.activate">开通</button>
         </div>
       </div>
     </div>
 
     <!-- 表格列表 -->
     <div id="tableListContainer">
-      <h2 style="font-size: 20px; font-weight: 600; color: #333; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
-        <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-        </svg>
-        <span data-i18n="tableList.title">数据表列表</span>
-      </h2>
-      <div id="tableList" class="table-list">
-        <!-- 表格列表将动态生成 -->
+      <!-- 下拉选择已有表格 -->
+      <div style="margin-bottom: 20px;">
+        <label style="display: block; font-size: 14px; font-weight: 500; color: #333; margin-bottom: 8px;" data-i18n="existingTable.selectLabel">选择处理的表格</label>
+        <div style="display: flex; gap: 8px;">
+          <select id="existingTableSelect" style="flex: 1; padding: 10px 12px; border: 1px solid #d9d9d9; border-radius: 6px; font-size: 14px; color: #333; background: white; cursor: pointer;">
+            <option value="" data-i18n="existingTable.selectPlaceholder">请选择一个表格</option>
+          </select>
+          <button id="bindingActionBtn" class="button button-primary" style="white-space: nowrap; display: none;">绑定自动推送</button>
+        </div>
       </div>
+
+      <!-- 选择笔记ID/链接列 -->
+      <div style="margin-bottom: 20px;">
+        <label style="display: block; font-size: 14px; font-weight: 500; color: #333; margin-bottom: 8px;">请选择笔记ID/链接所在列</label>
+        <select id="noteIdColumnSelect" style="width: 100%; padding: 10px 12px; border: 1px solid #d9d9d9; border-radius: 6px; font-size: 14px; color: #333; background: white; cursor: pointer;" disabled>
+          <option value="">请先选择表格</option>
+        </select>
+        <div style="font-size: 12px; color: #999; margin-top: 6px;">提示：选择包含小红书笔记ID或链接的列</div>
+      </div>
+
+      <!-- 绑定详情（默认隐藏，点击按钮后显示） -->
+      <div id="selectedTableInfo" style="display: none; padding: 16px; background: #fafafa; border-radius: 8px; border: 1px solid #e8e8e8;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+          <div>
+            <div style="font-size: 12px; color: #999; margin-bottom: 4px;" data-i18n="existingTable.tableName">表格名称</div>
+            <div id="selectedTableName" style="font-size: 16px; font-weight: 600; color: #333;">-</div>
+          </div>
+          <span id="bindingStatusBadge" style="padding: 4px 12px; border-radius: 4px; font-size: 12px; font-weight: 500;">-</span>
+        </div>
+
+        <!-- 绑定详情 -->
+        <div id="bindingDetails" style="display: none; padding-top: 12px; border-top: 1px solid #e8e8e8; margin-top: 12px;">
+          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+            <div>
+              <div style="font-size: 12px; color: #999; margin-bottom: 4px;" data-i18n="existingTable.tableId">表格ID</div>
+              <div id="selectedTableId" style="font-size: 14px; color: #333; word-break: break-all;">-</div>
+            </div>
+            <div>
+              <div style="font-size: 12px; color: #999; margin-bottom: 4px;" data-i18n="existingTable.xhsId">小红书号</div>
+              <div id="selectedXhsId" style="font-size: 14px; color: #333;">-</div>
+            </div>
+          </div>
+          <div style="margin-top: 12px;">
+            <div style="font-size: 12px; color: #999; margin-bottom: 4px;" data-i18n="existingTable.remark">备注</div>
+            <div id="selectedRemark" style="font-size: 14px; color: #333;">-</div>
+          </div>
+          <div style="margin-top: 12px;">
+            <div style="font-size: 12px; color: #999; margin-bottom: 4px;">推送字段</div>
+            <div id="selectedFieldsDisplay" style="font-size: 13px; color: #333; background: #f5f5f5; padding: 8px; border-radius: 6px; max-height: 80px; overflow-y: auto;">-</div>
+          </div>
+        </div>
+
+        <!-- 操作按钮 -->
+        <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #e8e8e8; display: flex; gap: 8px;">
+          <button id="tableActionBtn" class="button button-primary" style="flex: 1;">-</button>
+          <button id="unbindBtn" class="button button-danger" style="display: none;" data-i18n="buttons.unbind">解除绑定</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 获取字段展示 -->
+    <div class="fields-showcase">
+      <div class="fields-showcase-header">
+        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+        </svg>
+        <span class="fields-showcase-title">可获取数据</span>
+      </div>
+
+      <!-- 操作按钮 -->
+      <div style="display: flex; gap: 8px; margin-bottom: 16px; justify-content: flex-end;">
+        <button id="selectAllFieldsBtn" class="button button-secondary button-small" data-i18n="buttons.selectAll">全选</button>
+        <button id="deselectAllFieldsBtn" class="button button-secondary button-small" data-i18n="buttons.deselectAll">清空</button>
+        <button id="saveFieldSelectionBtn" class="button button-primary button-small" data-i18n="buttons.save">保存</button>
+      </div>
+
+      <div class="fields-showcase-grid">
+        <div class="field-item">
+          <input type="checkbox" class="field-checkbox" value="authorNickname" checked>
+          <span class="field-label">作者昵称</span>
+        </div>
+        <div class="field-item">
+          <input type="checkbox" class="field-checkbox" value="authorRedId" checked>
+          <span class="field-label">作者小红书号</span>
+        </div>
+        <div class="field-item">
+          <input type="checkbox" class="field-checkbox" value="type" checked>
+          <span class="field-label">笔记类型</span>
+        </div>
+        <div class="field-item">
+          <input type="checkbox" class="field-checkbox" value="title" checked>
+          <span class="field-label">笔记标题</span>
+        </div>
+        <div class="field-item">
+          <input type="checkbox" class="field-checkbox" value="description" checked>
+          <span class="field-label">笔记内容</span>
+        </div>
+        <div class="field-item">
+          <input type="checkbox" class="field-checkbox" value="imageAttachments" checked>
+          <span class="field-label">图片列表</span>
+        </div>
+        <div class="field-item">
+          <input type="checkbox" class="field-checkbox" value="tags" checked>
+          <span class="field-label">话题</span>
+        </div>
+        <div class="field-item">
+          <input type="checkbox" class="field-checkbox" value="likes" checked>
+          <span class="field-label">点赞数</span>
+        </div>
+        <div class="field-item">
+          <input type="checkbox" class="field-checkbox" value="collects" checked>
+          <span class="field-label">收藏数</span>
+        </div>
+        <div class="field-item">
+          <input type="checkbox" class="field-checkbox" value="shares" checked>
+          <span class="field-label">转发数</span>
+        </div>
+        <div class="field-item">
+          <input type="checkbox" class="field-checkbox" value="comments" checked>
+          <span class="field-label">评论数</span>
+        </div>
+        <div class="field-item">
+          <input type="checkbox" class="field-checkbox" value="videoUrl" checked>
+          <span class="field-label">视频地址</span>
+        </div>
+        <div class="field-item">
+          <input type="checkbox" class="field-checkbox" value="videoDuration" checked>
+          <span class="field-label">视频时长(秒)</span>
+        </div>
+        <div class="field-item">
+          <input type="checkbox" class="field-checkbox" value="videoSubtitle" checked>
+          <span class="field-label">视频字幕</span>
+        </div>
+        <div class="field-item">
+          <input type="checkbox" class="field-checkbox" value="videoText" checked>
+          <span class="field-label">视频文本</span>
+        </div>
+        <div class="field-item">
+          <input type="checkbox" class="field-checkbox" value="ipLocation" checked>
+          <span class="field-label">发文地址</span>
+        </div>
+        <div class="field-item">
+          <input type="checkbox" class="field-checkbox" value="publishTime" checked>
+          <span class="field-label">发布时间</span>
+        </div>
+        <div class="field-item">
+          <input type="checkbox" class="field-checkbox" value="fetchTime" checked>
+          <span class="field-label">获取时间</span>
+        </div>
+        <div class="field-item">
+          <input type="checkbox" class="field-checkbox" value="source" checked>
+          <span class="field-label">数据来源</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 开始处理按钮 -->
+    <div style="margin-top: 32px; text-align: center;">
+      <button id="startProcessingBtn" class="button button-primary" style="padding: 14px 40px; font-size: 16px; font-weight: 600; min-width: 200px;" data-i18n="buttons.startProcessing">
+        开始处理
+      </button>
+      <p style="font-size: 13px; color: #999; margin-top: 12px;" data-i18n="processing.hint">点击选择要处理的列</p>
     </div>
 
     <div id="status" class="status"></div>
@@ -862,10 +950,18 @@
     <div class="modal" style="position: relative;">
       <button class="modal-close" onclick="closeBindModal()">&times;</button>
       <div class="modal-header">
-        <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
-        </svg>
-        <span id="modalTitle" data-i18n="modal.bindTitle">绑定小红书账号</span>
+        <div style="display: flex; align-items: center; gap: 8px; flex: 1;">
+          <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+          </svg>
+          <span id="modalTitle" data-i18n="modal.bindTitle">绑定小红书账号</span>
+        </div>
+        <a href="https://hwec94xy3tc.feishu.cn/wiki/CYtEwYG73iLQWlkaysKcgoO6nKf?from=from_copylink" target="_blank" title="帮助" style="color: #1890ff; text-decoration: none; display: flex; align-items: center; gap: 4px; font-size: 14px; cursor: pointer;">
+          <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <span data-i18n="buttons.help">帮助</span>
+        </a>
       </div>
       <form id="bindForm">
         <input type="hidden" id="bindAppToken">
@@ -894,6 +990,23 @@
           <input type="text" id="remark" placeholder="请输入备注信息">
         </div>
 
+        <!-- 字段选择区域 -->
+        <div class="form-group" style="background: #fafafa; padding: 16px; border-radius: 8px; border: 1px solid #e8e8e8;">
+          <label style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+            <span style="font-weight: 600; color: #333;">推送字段设置</span>
+            <div style="display: flex; gap: 8px;">
+              <button type="button" id="selectAllFields" style="padding: 4px 12px; font-size: 12px; background: #fff; border: 1px solid #d9d9d9; border-radius: 4px; cursor: pointer;">全选</button>
+              <button type="button" id="deselectAllFields" style="padding: 4px 12px; font-size: 12px; background: #fff; border: 1px solid #d9d9d9; border-radius: 4px; cursor: pointer;">清空</button>
+            </div>
+          </label>
+          <div id="fieldSelectionContainer" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; max-height: 200px; overflow-y: auto; padding: 8px; background: #fff; border-radius: 6px; border: 1px solid #e8e8e8;">
+            <!-- 字段复选框将在这里动态生成 -->
+          </div>
+          <div style="font-size: 12px; color: #999; margin-top: 8px;">
+            提示：选择需要采集的字段，保存后推送自动处理将按照此配置推送字段
+          </div>
+        </div>
+
         <div class="form-group" style="background: #f5f5f5; padding: 12px; border-radius: 8px;">
           <div style="font-size: 12px; color: #666;">
             <div><strong data-i18n="modal.extractedInfo">提取信息</strong>:</div>
@@ -914,6 +1027,133 @@
           <button type="submit" class="button button-primary" data-i18n="buttons.save">保存</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- 已绑定表格列表弹窗 -->
+  <div id="boundTablesModal" class="modal-overlay">
+    <div class="modal" style="max-width: 600px;">
+      <button class="modal-close" onclick="closeBoundTablesModal()">&times;</button>
+      <div class="modal-header">
+        <h2 data-i18n="boundTablesList.title">已绑定表格列表</h2>
+      </div>
+      <div style="padding: 24px;">
+        <div id="boundTablesList" style="max-height: 400px; overflow-y: auto;">
+          <!-- 表格列表将在这里动态生成 -->
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="button button-secondary" onclick="closeBoundTablesModal()" data-i18n="buttons.close">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 充值弹窗 -->
+  <div id="rechargeModal" class="modal-overlay">
+    <div class="modal" style="max-width: 800px; max-height: 90vh; overflow-y: auto;">
+      <button class="modal-close" onclick="closeRechargeModal()">&times;</button>
+      <div class="modal-header">
+        <h2 data-i18n="recharge.title">充值套餐</h2>
+      </div>
+      <div style="padding: 24px;">
+        <!-- 卖点文案 -->
+        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; padding: 20px; margin-bottom: 20px; color: white;">
+          <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+            </svg>
+            <span data-i18n="recharge.highlightTitle">一键获取笔记详情</span>
+          </h3>
+          <ul style="list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
+            <li style="display: flex; align-items: center; gap: 8px; font-size: 14px;">
+              <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="flex-shrink: 0;">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              <span data-i18n="recharge.highlight1">无论视频多长实时获取视频文案</span>
+            </li>
+            <li style="display: flex; align-items: center; gap: 8px; font-size: 14px;">
+              <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="flex-shrink: 0;">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              <span data-i18n="recharge.highlight2">节省时间，提升效率</span>
+            </li>
+            <li style="display: flex; align-items: center; gap: 8px; font-size: 14px;">
+              <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="flex-shrink: 0;">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              <span data-i18n="recharge.highlight3">无需搭配其他付费视频转文字插件</span>
+            </li>
+            <li style="display: flex; align-items: center; gap: 8px; font-size: 14px;">
+              <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="flex-shrink: 0;">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              <span data-i18n="recharge.highlight4">批量处理，一键采集</span>
+            </li>
+            <li style="display: flex; align-items: flex-start; gap: 8px; font-size: 14px; grid-column: 1 / -1;">
+              <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="flex-shrink: 0; margin-top: 2px;">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              <span data-i18n="recharge.highlight5">无需安装插件实现小红书app直接推送到飞书多维表格</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- 优惠倒计时 -->
+        <div id="discountCountdown" style="background: #fff5f5; border: 2px solid #ff4d4f; border-radius: 8px; padding: 12px 20px; margin-bottom: 16px; display: flex; align-items: center; justify-content: center; gap: 12px;">
+          <svg width="20" height="20" fill="none" stroke="#ff4d4f" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <span style="font-size: 14px; color: #666;" data-i18n="recharge.limitedTimeOffer">限时优惠，距结束仅剩：</span>
+          <span id="promoCountdown" style="font-size: 20px; font-weight: 700; color: #ff4d4f;">00:00:00</span>
+        </div>
+
+        <!-- 产品列表 -->
+        <div id="productsList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-bottom: 16px;">
+          <!-- 产品卡片将在这里动态生成 -->
+        </div>
+
+        <!-- 支付方式选择 -->
+        <div id="paymentMethodSection" style="display: none; margin-top: 24px; padding-top: 24px; border-top: 1px solid #e8e8e8;">
+          <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 16px;" data-i18n="recharge.paymentMethod">支付方式</h3>
+          <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+            <label style="display: flex; align-items: center; gap: 8px; padding: 12px 16px; border: 2px solid #e8e8e8; border-radius: 8px; cursor: pointer; transition: all 0.3s;">
+              <input type="radio" name="paymentType" value="alipay" checked>
+              <span data-i18n="recharge.alipay">支付宝</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; padding: 12px 16px; border: 2px solid #e8e8e8; border-radius: 8px; cursor: pointer; transition: all 0.3s;">
+              <input type="radio" name="paymentType" value="wxpay">
+              <span data-i18n="recharge.wechat">微信支付</span>
+            </label>
+          </div>
+          <button type="button" id="submitOrderBtn" style="
+            width: 100%;
+            padding: 16px 32px;
+            font-size: 18px;
+            font-weight: 600;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+          " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(102, 126, 234, 0.6)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(102, 126, 234, 0.4)';" data-i18n="recharge.submitOrder">提交订单</button>
+        </div>
+
+        <!-- 支付二维码区域 -->
+        <div id="paymentQrSection" style="display: none; text-align: center; padding: 24px; background: #f5f5f5; border-radius: 8px;">
+          <div id="qrCodeContainer" style="display: inline-block; padding: 16px; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            <img id="paymentQrCode" style="width: 200px; height: 200px; display: block;">
+          </div>
+          <div style="margin-top: 16px;">
+            <p id="paymentMethodHint" style="font-size: 16px; color: #333; font-weight: 600; margin-bottom: 8px;"></p>
+            <p id="paymentAmount" style="font-size: 20px; color: #ff4d4f; font-weight: 700; margin-bottom: 8px;"></p>
+            <p style="font-size: 14px; color: #666; margin-bottom: 8px;" data-i18n="recharge.scanToPay">请使用手机扫码支付</p>
+            <p id="countdownTimer" style="font-size: 18px; font-weight: 600; color: #ff4d4f;"></p>
+            <p style="font-size: 12px; color: #999; margin-top: 8px;"><span data-i18n="recharge.orderId">订单号:</span> <span id="displayOrderId"></span></p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
