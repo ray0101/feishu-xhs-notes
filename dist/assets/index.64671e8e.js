@@ -167,11 +167,11 @@ import{p as L,q as Te}from"./vendor-lark.9e248cc2.js";import{j as Ie,$ as e}from
           </svg>
           <span>\u5207\u6362\u5230\u300C${B}\u300D</span>
         </button>
-      `),m&&e("#summaryStats").after(`
+      `),m&&(e(".summary-actions").remove(),e(".summary-failed-list").remove(),e("#summaryStats").after(`
         <div class="summary-actions">
           ${m}
         </div>
-      `),a&&a.length>0){const v=a.map(F=>`
+      `)),a&&a.length>0){const v=a.map(F=>`
         <div class="failed-record-item">
           <div class="failed-record-index">\u7B2C ${F.index} \u6761</div>
           <div class="failed-record-reason">${F.reason}</div>
