@@ -81,6 +81,46 @@
       margin-bottom: 24px;
     }
 
+    /* 用户信息响应式布局 */
+    @media (max-width: 580px) {
+      #userInfo > div:first-child {
+        flex-direction: column;
+        align-items: stretch !important;
+        gap: 12px !important;
+      }
+
+      #userInfo > div > div:first-child > div {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
+      }
+
+      #userInfo > div > div:first-child > div > div > div {
+        font-size: 11px !important;
+      }
+
+      #userInfo > div > div:first-child > div > div > div[id] {
+        font-size: 14px !important;
+      }
+
+      #userInfo > div > div:first-child > div > div:nth-child(2) > div {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 4px !important;
+      }
+
+      #userInfo > div > div:last-child {
+        width: 100%;
+        display: flex;
+        justify-content: flex-start;
+      }
+    }
+
+    @media (max-width: 400px) {
+      #userInfo > div > div:first-child > div {
+        grid-template-columns: 1fr 1fr !important;
+      }
+    }
+
     /* 表格列表样式 */
     .table-list {
       display: flex;
@@ -714,9 +754,682 @@
       flex: 1;
       margin: 0;
     }
+
+    /* ==================== 开始提取按钮悬浮样式 ==================== */
+    .sticky-start-button {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+      box-shadow: 0 4px 20px rgba(255, 36, 66, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .sticky-start-button:hover {
+      box-shadow: 0 6px 25px rgba(255, 36, 66, 0.4);
+      transform: translateX(-50%) translateY(-2px);
+    }
+
+    /* ==================== 进度弹出层样式 ==================== */
+    .progress-modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(8px);
+      z-index: 10002;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .progress-modal-overlay.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    .progress-modal-content {
+      background: white;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 680px;
+      max-height: 90vh;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(255, 36, 66, 0.3);
+      animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .progress-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 28px;
+      background: linear-gradient(135deg, #fff5f7 0%, #ffeef0 100%);
+      border-bottom: 1px solid rgba(255, 36, 66, 0.1);
+    }
+
+    .progress-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 20px;
+      font-weight: 700;
+      color: #ff2442;
+    }
+
+    .progress-title svg {
+      flex-shrink: 0;
+    }
+
+    .stop-button {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 18px;
+      background: white;
+      color: #ff4d4f;
+      border: 2px solid #ff4d4f;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(255, 77, 79, 0.15);
+    }
+
+    .stop-button:hover {
+      background: #ff4d4f;
+      color: white;
+      box-shadow: 0 4px 15px rgba(255, 77, 79, 0.3);
+      transform: translateY(-1px);
+    }
+
+    .stop-button:active {
+      transform: translateY(0);
+    }
+
+    .progress-info-section {
+      padding: 28px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .progress-current-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 18px 20px;
+      background: linear-gradient(135deg, #fffbfb 0%, #fff5f7 100%);
+      border-radius: 14px;
+      border: 2px solid rgba(255, 36, 66, 0.15);
+      margin-bottom: 24px;
+    }
+
+    .progress-emoji {
+      font-size: 28px;
+      flex-shrink: 0;
+      animation: bounce 1s ease infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-5px);
+      }
+    }
+
+    .progress-text {
+      font-size: 15px;
+      font-weight: 600;
+      color: #ff2442;
+      flex: 1;
+    }
+
+    /* 进度条 */
+    .progress-bar-container {
+      margin-bottom: 28px;
+    }
+
+    .progress-bar-wrapper {
+      height: 12px;
+      background: #f0f0f0;
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+      margin-bottom: 10px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      border-radius: 10px;
+      position: relative;
+      transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+    }
+
+    .progress-bar-gradient {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, #ff2442 0%, #ff6b6b 50%, #ff2442 100%);
+      background-size: 200% 100%;
+      animation: shimmer 2s ease infinite;
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: 200% 0;
+      }
+      100% {
+        background-position: -200% 0;
+      }
+    }
+
+    .progress-percentage {
+      text-align: center;
+      font-size: 24px;
+      font-weight: 700;
+      color: #ff2442;
+    }
+
+    /* 统计卡片 */
+    .progress-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 8px;
+      padding: 16px 12px;
+      background: white;
+      border-radius: 12px;
+      border: 2px solid #f0f0f0;
+      transition: all 0.3s ease;
+      min-width: 0;
+    }
+
+    .stat-item:hover {
+      border-color: #ff6b6b;
+      box-shadow: 0 4px 12px rgba(255, 107, 107, 0.15);
+      transform: translateY(-2px);
+    }
+
+    .stat-icon {
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .stat-content {
+      flex: 1;
+      min-width: 0;
+      width: 100%;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: #999;
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .stat-value {
+      font-size: 20px;
+      font-weight: 700;
+      color: #333;
+      line-height: 1;
+    }
+
+    /* 窄屏幕适配 */
+    @media (max-width: 580px) {
+      .progress-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+
+      .stat-item {
+        padding: 12px 8px;
+      }
+
+      .stat-icon {
+        font-size: 20px;
+      }
+
+      .stat-value {
+        font-size: 18px;
+      }
+
+      .stat-label {
+        font-size: 11px;
+      }
+    }
+
+    /* 当前笔记信息 */
+    .current-note-info {
+      background: #fafafa;
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin-bottom: 20px;
+      border: 1px solid #f0f0f0;
+    }
+
+    .note-info-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #666;
+      margin-bottom: 8px;
+    }
+
+    .note-info-content {
+      font-size: 14px;
+      color: #333;
+      font-weight: 500;
+      word-break: break-word;
+      line-height: 1.5;
+    }
+
+    /* 处理日志 */
+    .progress-logs-section {
+      background: #fafafa;
+      border-radius: 12px;
+      border: 1px solid #f0f0f0;
+      overflow: hidden;
+    }
+
+    .logs-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 18px;
+      background: white;
+      border-bottom: 1px solid #f0f0f0;
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .logs-container {
+      max-height: 200px;
+      overflow-y: auto;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .log-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 14px;
+      background: white;
+      border-radius: 8px;
+      border-left: 3px solid #e8e8e8;
+      font-size: 13px;
+      color: #666;
+      animation: slideInLeft 0.3s ease;
+    }
+
+    @keyframes slideInLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .log-item.success {
+      border-left-color: #52c41a;
+      background: #f6ffed;
+    }
+
+    .log-item.error {
+      border-left-color: #ff4d4f;
+      background: #fff1f0;
+    }
+
+    .log-item.processing {
+      border-left-color: #1890ff;
+      background: #e6f7ff;
+    }
+
+    .log-time {
+      font-size: 11px;
+      color: #999;
+      flex-shrink: 0;
+    }
+
+    .log-content {
+      flex: 1;
+      word-break: break-word;
+    }
+
+    /* 完成总结 */
+    .progress-summary {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      animation: scaleIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes scaleIn {
+      from {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .summary-icon {
+      font-size: 64px;
+      margin-bottom: 20px;
+      animation: celebration 0.6s ease;
+    }
+
+    @keyframes celebration {
+      0% {
+        transform: scale(0);
+      }
+      50% {
+        transform: scale(1.2);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .summary-title {
+      font-size: 28px;
+      font-weight: 700;
+      color: #ff2442;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    .summary-stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      width: 100%;
+      max-width: 400px;
+      margin-bottom: 24px;
+    }
+
+    .summary-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+      max-width: 400px;
+      margin-bottom: 24px;
+    }
+
+    .summary-action-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: white;
+      color: #ff2442;
+      border: 2px solid #ff2442;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(255, 36, 66, 0.1);
+    }
+
+    .summary-action-button:hover {
+      background: #ff2442;
+      color: white;
+      box-shadow: 0 4px 15px rgba(255, 36, 66, 0.25);
+      transform: translateY(-2px);
+    }
+
+    .summary-action-button:active {
+      transform: translateY(0);
+    }
+
+    .summary-action-button svg {
+      flex-shrink: 0;
+    }
+
+    .summary-stat-item {
+      text-align: center;
+      padding: 20px;
+      background: linear-gradient(135deg, #fff5f7 0%, #ffeef0 100%);
+      border-radius: 14px;
+      border: 2px solid rgba(255, 36, 66, 0.15);
+    }
+
+    .summary-stat-value {
+      font-size: 36px;
+      font-weight: 700;
+      color: #ff2442;
+      margin-bottom: 8px;
+    }
+
+    .summary-stat-label {
+      font-size: 14px;
+      color: #666;
+    }
+
+    .summary-close-button {
+      padding: 14px 48px;
+      background: linear-gradient(135deg, #ff2442 0%, #ff6b6b 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(255, 36, 66, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .summary-close-button:hover {
+      box-shadow: 0 6px 20px rgba(255, 36, 66, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .summary-close-button:active {
+      transform: translateY(0);
+    }
+
+    /* 滚动条美化 */
+    .logs-container::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .logs-container::-webkit-scrollbar-track {
+      background: #f0f0f0;
+      border-radius: 3px;
+    }
+
+    .logs-container::-webkit-scrollbar-thumb {
+      background: #ff6b6b;
+      border-radius: 3px;
+    }
+
+    .logs-container::-webkit-scrollbar-thumb:hover {
+      background: #ff2442;
+    }
+
+    /* 失败列表样式 */
+    .summary-failed-list {
+      margin-top: 24px;
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .failed-list-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 12px 16px;
+      background: linear-gradient(135deg, #fff1f0 0%, #ffebe8 100%);
+      border-radius: 10px 10px 0 0;
+      border: 2px solid rgba(255, 77, 79, 0.15);
+      border-bottom: none;
+      font-size: 14px;
+      font-weight: 600;
+      color: #ff4d4f;
+    }
+
+    .failed-copy-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      padding: 0;
+      background: white;
+      border: 1px solid rgba(255, 77, 79, 0.3);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .failed-copy-button:hover {
+      background: #ff4d4f;
+      border-color: #ff4d4f;
+    }
+
+    .failed-copy-button:hover svg {
+      stroke: white;
+    }
+
+    .failed-copy-button:active {
+      transform: scale(0.95);
+    }
+
+    .failed-list-container {
+      max-height: 250px;
+      overflow-y: auto;
+      background: white;
+      border-radius: 0 0 10px 10px;
+      border: 2px solid rgba(255, 77, 79, 0.15);
+      border-top: none;
+    }
+
+    .failed-record-item {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 12px 16px;
+      border-bottom: 1px solid #f0f0f0;
+      transition: all 0.2s ease;
+    }
+
+    .failed-record-item:last-child {
+      border-bottom: none;
+    }
+
+    .failed-record-item:hover {
+      background: #fff5f5;
+    }
+
+    .failed-record-index {
+      font-size: 13px;
+      font-weight: 600;
+      color: #ff4d4f;
+    }
+
+    .failed-record-reason {
+      font-size: 13px;
+      color: #666;
+      line-height: 1.4;
+    }
+
+    .failed-record-noteid {
+      font-size: 12px;
+      color: #999;
+      font-family: 'Courier New', monospace;
+      background: #f5f5f5;
+      padding: 4px 8px;
+      border-radius: 4px;
+      word-break: break-all;
+      margin-top: 2px;
+    }
+
+    .failed-list-container::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .failed-list-container::-webkit-scrollbar-track {
+      background: #f0f0f0;
+      border-radius: 3px;
+    }
+
+    .failed-list-container::-webkit-scrollbar-thumb {
+      background: #ff6b6b;
+      border-radius: 3px;
+    }
+
+    .failed-list-container::-webkit-scrollbar-thumb:hover {
+      background: #ff2442;
+    }
   </style>
   
-  <script type="module" crossorigin src="./assets/index.f74e5faa.js"></script>
+  <script type="module" crossorigin src="./assets/index.ff5d3087.js"></script>
   <link rel="modulepreload" crossorigin href="./assets/vendor-lark.9e248cc2.js">
   <link rel="modulepreload" crossorigin href="./assets/vendor-jquery.88f4ff12.js">
   <link rel="modulepreload" crossorigin href="./assets/vendor-i18n.7cd67a60.js">
@@ -731,7 +1444,7 @@
 
     <!-- 用户信息 -->
     <div id="userInfo" style="display: none;">
-      <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px;">
+      <div>
         <div style="flex: 1; min-width: 0;">
           <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
             <div>
@@ -751,8 +1464,7 @@
             </div>
           </div>
         </div>
-        <div style="width: 1px; height: 60px; background: rgba(255, 107, 107, 0.2); flex-shrink: 0;"></div>
-        <div style="display: flex; gap: 8px; flex-shrink: 0;">
+        <div style="display: flex; gap: 8px; flex-shrink: 0; margin-top: 12px;">
           <button id="refreshUserInfo" class="button button-secondary button-small" data-i18n="buttons.refresh">刷新</button>
         </div>
       </div>
@@ -917,11 +1629,10 @@
     </div>
 
     <!-- 开始处理按钮 -->
-    <div style="margin-top: 32px; text-align: center;">
-      <button id="startProcessingBtn" class="button button-primary" style="padding: 14px 40px; font-size: 16px; font-weight: 600; min-width: 200px;" data-i18n="buttons.startProcessing">
+    <div class="start-button-container">
+      <button id="startProcessingBtn" class="button button-primary sticky-start-button" style="padding: 14px 40px; font-size: 16px; font-weight: 600; min-width: 200px; border-radius: 50px;" data-i18n="buttons.startProcessing">
         开始处理
       </button>
-      <p style="font-size: 13px; color: #999; margin-top: 12px;" data-i18n="processing.hint">点击选择要处理的列</p>
     </div>
 
     <div id="status" class="status"></div>
@@ -980,7 +1691,7 @@
         </div>
 
         <div class="form-group">
-          <label data-i18n="modal.xhsUrl">小红书绑定(绑定后支持手机客户端推送)</label>
+          <label data-i18n="modal.xhsUrl">小红书绑定(绑定后该账号转发至小助手的笔记会自动推送到该表格)</label>
           <input type="text" id="xhsUrl" placeholder="https://www.xiaohongshu.com/user/profile/... 或直接输入24位ID">
           <div class="form-hint" data-i18n="modal.xhsUrlHint">支持 xiaohongshu.com 或 xhslink.com 链接，或直接输入24位小红书ID</div>
         </div>
@@ -1198,7 +1909,108 @@
   <!-- Toast 容器 -->
   <div id="toastContainer" class="toast-container"></div>
 
-  
+  <!-- 全屏进度弹出层 -->
+  <div id="progressModal" class="progress-modal-overlay">
+    <div class="progress-modal-content">
+      <!-- 头部 -->
+      <div class="progress-header">
+        <div class="progress-title">
+          <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+          </svg>
+          <span data-i18n="progress.title">正在提取笔记数据</span>
+        </div>
+        <button id="stopProcessingBtn" class="stop-button">
+          <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+            <rect x="6" y="6" width="12" height="12" rx="2"></rect>
+          </svg>
+          <span data-i18n="progress.stop">停止</span>
+        </button>
+      </div>
+
+      <!-- 进度信息 -->
+      <div class="progress-info-section">
+        <!-- 当前进度 -->
+        <div class="progress-current-item">
+          <div class="progress-emoji">✨</div>
+          <div class="progress-text" id="progressCurrentStatus">正在准备...</div>
+        </div>
+
+        <!-- 进度条 -->
+        <div class="progress-bar-container">
+          <div class="progress-bar-wrapper">
+            <div class="progress-bar" id="progressBar">
+              <div class="progress-bar-gradient"></div>
+            </div>
+          </div>
+          <div class="progress-percentage" id="progressPercentage">0%</div>
+        </div>
+
+        <!-- 详细统计 -->
+        <div class="progress-stats">
+          <div class="stat-item">
+            <div class="stat-icon">📝</div>
+            <div class="stat-content">
+              <div class="stat-label" data-i18n="progress.total">总数</div>
+              <div class="stat-value" id="totalCount">0</div>
+            </div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-icon">✅</div>
+            <div class="stat-content">
+              <div class="stat-label" data-i18n="progress.completed">已完成</div>
+              <div class="stat-value" id="completedCount">0</div>
+            </div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-icon">⏳</div>
+            <div class="stat-content">
+              <div class="stat-label" data-i18n="progress.pending">待处理</div>
+              <div class="stat-value" id="pendingCount">0</div>
+            </div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-icon">❌</div>
+            <div class="stat-content">
+              <div class="stat-label" data-i18n="progress.failed">失败</div>
+              <div class="stat-value" id="failedCount">0</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 当前处理的笔记信息 -->
+        <div class="current-note-info" id="currentNoteInfo" style="display: none;">
+          <div class="note-info-label">
+            <span style="font-size: 14px;">📌</span>
+            <span data-i18n="progress.currentNote">当前笔记</span>
+          </div>
+          <div class="note-info-content" id="currentNoteTitle">-</div>
+        </div>
+
+        <!-- 处理日志 -->
+        <div class="progress-logs-section">
+          <div class="logs-header">
+            <span style="font-size: 14px;">📋</span>
+            <span data-i18n="progress.logs">处理日志</span>
+          </div>
+          <div class="logs-container" id="progressLogs">
+            <!-- 动态添加日志项 -->
+          </div>
+        </div>
+      </div>
+
+      <!-- 完成总结（初始隐藏） -->
+      <div class="progress-summary" id="progressSummary" style="display: none;">
+        <div class="summary-icon">🎉</div>
+        <div class="summary-title" data-i18n="progress.summaryTitle">处理完成！</div>
+        <div class="summary-stats" id="summaryStats">
+          <!-- 动态生成统计信息 -->
+        </div>
+        <button class="summary-close-button" id="closeProgressModalBtn" data-i18n="progress.close">关闭</button>
+      </div>
+    </div>
+  </div>
+
 </body>
 
 </html>
