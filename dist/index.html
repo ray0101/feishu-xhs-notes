@@ -87,6 +87,13 @@
     }
 
     /* 用户信息响应式布局 */
+    @media (max-width: 768px) {
+      #userInfo > div > div:first-child > div {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
+      }
+    }
+
     @media (max-width: 580px) {
       #userInfo > div:first-child {
         flex-direction: column;
@@ -122,7 +129,7 @@
 
     @media (max-width: 400px) {
       #userInfo > div > div:first-child > div {
-        grid-template-columns: 1fr 1fr !important;
+        grid-template-columns: 1fr !important;
       }
     }
 
@@ -1541,7 +1548,7 @@
   </script>
   <script src="https://webapi.amap.com/maps?v=2.0&key=e3ce8a9c46647a767efedf92e0cefe23"></script>
   
-  <script type="module" crossorigin src="./assets/index.0f003698.js"></script>
+  <script type="module" crossorigin src="./assets/index.f53b149b.js"></script>
   <link rel="modulepreload" crossorigin href="./assets/vendor-lark.9e248cc2.js">
   <link rel="modulepreload" crossorigin href="./assets/vendor-jquery.88f4ff12.js">
   <link rel="modulepreload" crossorigin href="./assets/vendor-i18n.7cd67a60.js">
@@ -1581,7 +1588,11 @@
     <div id="userInfo" style="display: none;">
       <div>
         <div style="flex: 1; min-width: 0;">
-          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
+            <div id="todayDownloadQuotaContainer" style="display: flex; flex-direction: column; align-items: flex-start;">
+              <div style="font-size: 12px; color: #999; margin-bottom: 4px;">今日下载额度</div>
+              <div id="todayDownloadQuota" style="font-size: 16px; font-weight: 600; color: #333;">-</div>
+            </div>
             <div>
               <div style="display: flex; align-items: center; gap: 4px;">
                 <div style="font-size: 12px; color: #999; margin-bottom: 4px;" data-i18n="userInfo.remainDownloads">提取额度</div>
@@ -1596,9 +1607,9 @@
                 <button id="rechargeDownloadsBtn" class="button button-primary button-small" style="padding: 4px 10px; font-size: 12px;" data-i18n="buttons.renew">获取额度</button>
               </div>
             </div>
-            <div id="todayDownloadQuotaContainer" style="display: flex; flex-direction: column; align-items: flex-end;">
-              <div style="font-size: 12px; color: #999; margin-bottom: 4px;">今日下载额度</div>
-              <div id="todayDownloadQuota" style="font-size: 16px; font-weight: 600; color: #333;">-</div>
+            <div>
+              <div style="font-size: 12px; color: #999; margin-bottom: 4px;" data-i18n="userInfo.boundTables">已绑定表格</div>
+              <div id="boundTableCount" style="font-size: 16px; font-weight: 600; color: #1890ff; cursor: pointer; text-decoration: underline;">-</div>
             </div>
           </div>
         </div>
