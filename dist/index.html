@@ -1105,7 +1105,7 @@
       overflow-y: auto;
       padding: 12px;
       display: flex;
-      flex-direction: column;
+      flex-direction: column-reverse;
       gap: 8px;
     }
 
@@ -1548,7 +1548,7 @@
   </script>
   <script src="https://webapi.amap.com/maps?v=2.0&key=e3ce8a9c46647a767efedf92e0cefe23"></script>
   
-  <script type="module" crossorigin src="./assets/index.a5a345e7.js"></script>
+  <script type="module" crossorigin src="./assets/index.a1d235ef.js"></script>
   <link rel="modulepreload" crossorigin href="./assets/vendor-lark.9e248cc2.js">
   <link rel="modulepreload" crossorigin href="./assets/vendor-jquery.88f4ff12.js">
   <link rel="modulepreload" crossorigin href="./assets/vendor-i18n.7cd67a60.js">
@@ -1831,18 +1831,13 @@
 
         <!-- 请求页数 -->
         <div style="margin-bottom: 20px;">
-          <label style="display: block; font-size: 13px; color: #666; margin-bottom: 6px;" data-i18n="search.pageCount">请求页数</label>
+          <label style="display: block; font-size: 13px; color: #666; margin-bottom: 6px;" data-i18n="search.pageCount">请求页数（一页约20条）</label>
           <select id="searchPageCount" style="width: 100%; padding: 10px; border: 2px solid #f0f0f0; border-radius: 6px; font-size: 14px;">
             <option value="1">约20条</option>
             <option value="2">约40条</option>
             <option value="3">约60条</option>
             <option value="4">约80条</option>
             <option value="5">约100条</option>
-            <option value="6">约120条</option>
-            <option value="7">约140条</option>
-            <option value="8">约160条</option>
-            <option value="9">约180条</option>
-            <option value="10">约200条</option>
           </select>
         </div>
 
@@ -1895,17 +1890,14 @@
           <label style="display: block; font-size: 14px; font-weight: 500; color: #333; margin-bottom: 8px;">获取模式</label>
           <select id="bloggerFetchMode" style="width: 100%; padding: 10px 12px; border: 2px solid #f0f0f0; border-radius: 8px; font-size: 14px;">
             <option value="all">获取所有笔记</option>
-            <option value="append">追加模式（从最新笔记ID后继续）</option>
-            <option value="afterDate">获取指定日期之后的数据</option>
+            <option value="append">追加模式（获取最早的笔记ID之前的数据）</option>
+            <option value="1">获取首页</option>
+            <option value="2">获取前2页</option>
+            <option value="3">获取前3页</option>
+            <option value="4">获取前4页</option>
+            <option value="5">获取前5页</option>
           </select>
-          <div id="bloggerFetchModeHint" style="font-size: 12px; color: #999; margin-top: 6px;">追加模式会从表格中最新笔记的ID之后继续获取</div>
-        </div>
-
-        <!-- 日期选择器（仅在选择"获取指定日期之后的数据"时显示） -->
-        <div id="bloggerDateSelector" style="margin-bottom: 20px; display: none;">
-          <label style="display: block; font-size: 14px; font-weight: 500; color: #333; margin-bottom: 8px;">选择日期</label>
-          <input type="date" id="bloggerFetchDate" style="width: 100%; padding: 10px 12px; border: 2px solid #f0f0f0; border-radius: 8px; font-size: 14px;">
-          <div style="font-size: 12px; color: #999; margin-top: 6px;">将获取发布日期在此日期之后的笔记</div>
+          <div id="bloggerFetchModeHint" style="font-size: 12px; color: #999; margin-top: 6px;">追加模式会从表格中最早笔记的ID之前继续获取</div>
         </div>
 
         <!-- 目标表格选择 -->
