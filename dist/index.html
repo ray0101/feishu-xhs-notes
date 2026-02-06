@@ -108,6 +108,15 @@
       white-space: nowrap;
     }
 
+    .svip-badge {
+      background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+      color: #1a1a1a;
+      box-shadow: none;
+      border: 2px solid #FFE44D;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+    }
+
     .login-status.logout {
       background: #f5f5f5;
       border-color: #d9d9d9;
@@ -1625,7 +1634,7 @@
   </script>
   <script src="https://webapi.amap.com/maps?v=2.0&key=e3ce8a9c46647a767efedf92e0cefe23"></script>
   
-  <script type="module" crossorigin src="./assets/index.cf9bd94e.js"></script>
+  <script type="module" crossorigin src="./assets/index.575a6723.js"></script>
   <link rel="modulepreload" crossorigin href="./assets/vendor-lark.9e248cc2.js">
   <link rel="modulepreload" crossorigin href="./assets/vendor-jquery.88f4ff12.js">
   <link rel="modulepreload" crossorigin href="./assets/vendor-i18n.7cd67a60.js">
@@ -1633,62 +1642,72 @@
 
 <body>
   <div class="container">
-    <div class="header">
-      <!-- 右上角登录状态 -->
-      <div class="login-status logout" id="loginStatus">
-        <div class="login-status-avatar" id="loginStatusAvatar" style="display: none;">
-          <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-          </svg>
-        </div>
-        <div class="login-status-text">
-          <span id="loginStatusWelcome" style="display: none;">
-            <span class="login-status-username" id="loginStatusUsername">-</span>
-          </span>
-          <span id="loginStatusNotLoggedIn" data-i18n="loginStatus.notLoggedIn">未登录</span>
-        </div>
-        <!-- 用户ID信息 -->
-        <div id="loginUserInfo" style="display: none; align-items: center; gap: 6px; margin-left: 12px;">
-          <span style="font-size: 11px; color: #999;">ID:</span>
-          <span id="loginUserId" style="font-size: 12px; color: #666; font-weight: 500;">-</span>
-          <button id="rechargeDownloadsBtn" class="button button-primary button-small" style="padding: 2px 8px; font-size: 11px; margin-left: 4px;" data-i18n="buttons.personalCenter">个人中心</button>
-          <button id="switchAccountBtn" class="button button-secondary button-small" style="padding: 2px 8px; font-size: 11px; margin-left: 4px;" data-i18n="buttons.clearCache">清除缓存</button>
-        </div>
-      </div>
-
-      <h1 class="title" data-i18n="title">小红书笔记提取-推送配置</h1>
-      <p class="subtitle" data-i18n="subtitle">绑定数据表与小红书账号，自动化数据采集</p>
-      <p style="font-size: 11px; color: #ccc; margin-top: 8px; font-style: italic;">本工具与小红书官方无关</p>
-    </div>
-
-    <!-- 用户信息 -->
-    <div id="userInfo" style="display: none; margin-bottom: 24px;">
-      <div>
-        <div style="flex: 1; min-width: 0; overflow-x: auto;">
-          <div style="display: flex; gap: 12px; white-space: nowrap;">
-            <div id="todayDownloadQuotaContainer" style="display: flex; flex-direction: column; align-items: flex-start; min-width: fit-content;">
-              <div style="font-size: 12px; color: #999; margin-bottom: 4px;">当月下载额度</div>
-              <div id="todayDownloadQuota" style="font-size: 16px; font-weight: 600; color: #333;">-</div>
+    <!-- 用户信息面板（合并登录信息和下载信息） -->
+    <div id="userInfo" style="display: none; margin-bottom: 24px; padding: 20px; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); border-radius: 12px;">
+      <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+        <!-- 左侧：用户信息 -->
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div class="login-status-avatar" id="loginStatusAvatar">
+            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+            </svg>
+          </div>
+          <div>
+            <div style="font-size: 14px; color: #666; margin-bottom: 4px;">
+              <span style="margin-right: 8px;" data-i18n="loginStatus.welcome">欢迎您,</span>
+              <span class="login-status-username" id="loginStatusUsername" style="font-size: 16px; font-weight: 600; color: #333;">-</span>
             </div>
-            <div style="min-width: fit-content;">
-              <div style="font-size: 12px; color: #999; margin-bottom: 4px; white-space: nowrap;">
-                <span data-i18n="userInfo.remainDownloads">提取额度</span>
-                <span id="quotaHelpIcon" style="cursor: help; color: #999; font-size: 14px; display: inline-block; vertical-align: middle;" title="点击查看说明">
-                  <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                  </svg>
-                </span>
-              </div>
-              <div id="remainDownloadContainer" style="cursor: pointer;" title="点击个人中心">
-                <div id="remainDownload" style="font-size: 16px; font-weight: 600; color: #52c41a;">-</div>
-                <div id="remainDownloadPrice" style="font-size: 12px; color: #999; text-decoration: line-through; margin-top: 2px;">-</div>
-              </div>
-            </div>
-            <div style="min-width: fit-content;">
-              <div style="font-size: 12px; color: #999; margin-bottom: 4px;" data-i18n="userInfo.boundTables">已绑定表格</div>
-              <div id="boundTableCount" style="font-size: 16px; font-weight: 600; color: #1890ff; cursor: pointer; text-decoration: underline;">-</div>
+            <div style="font-size: 12px; color: #999;">
+              <span>ID: </span>
+              <span id="loginUserId" style="color: #666; font-weight: 500;">-</span>
             </div>
           </div>
+        </div>
+
+        <!-- 右侧：统计信息和操作按钮 -->
+        <div style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
+          <!-- 当月下载额度 -->
+          <div id="todayDownloadQuotaContainer" style="text-align: center;">
+            <div style="font-size: 12px; color: #666; margin-bottom: 4px;">当月下载额度</div>
+            <div id="todayDownloadQuota" style="font-size: 18px; font-weight: 600; color: #333;">-</div>
+          </div>
+
+          <!-- 提取额度 -->
+          <div style="text-align: center;">
+            <div style="font-size: 12px; color: #666; margin-bottom: 4px;">
+              <span data-i18n="userInfo.remainDownloads">提取额度</span>
+              <span id="quotaHelpIcon" style="cursor: help; color: #999; font-size: 14px; display: inline-block; vertical-align: middle;" title="点击查看说明">
+                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </span>
+            </div>
+            <div id="remainDownloadContainer" style="cursor: pointer;" title="点击个人中心">
+              <div id="remainDownload" style="font-size: 18px; font-weight: 600; color: #52c41a;">-</div>
+              <div id="remainDownloadPrice" style="font-size: 11px; color: #999; text-decoration: line-through; margin-top: 2px;">-</div>
+            </div>
+          </div>
+
+          <!-- 已绑定表格 -->
+          <div style="text-align: center;">
+            <div style="font-size: 12px; color: #666; margin-bottom: 4px;" data-i18n="userInfo.boundTables">已绑定表格</div>
+            <div id="boundTableCount" style="font-size: 18px; font-weight: 600; color: #1890ff; cursor: pointer; text-decoration: underline;">-</div>
+          </div>
+
+          <!-- 操作按钮 -->
+          <div style="display: flex; gap: 8px;">
+            <button id="rechargeDownloadsBtn" class="button button-primary button-small" style="padding: 6px 12px; font-size: 12px;" data-i18n="buttons.personalCenter">个人中心</button>
+            <button id="switchAccountBtn" class="button button-secondary button-small" style="padding: 6px 12px; font-size: 12px;" data-i18n="buttons.clearCache">清除缓存</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 未登录状态 -->
+    <div class="header">
+      <div class="login-status logout" id="loginStatus">
+        <div class="login-status-text">
+          <span id="loginStatusNotLoggedIn" data-i18n="loginStatus.notLoggedIn">未登录</span>
         </div>
       </div>
     </div>
@@ -1740,13 +1759,13 @@
         <div style="font-size: 12px; color: #999; margin-top: 6px;" data-i18n="existingTable.selectViewHint">提示：选择要从中提取记录的视图</div>
       </div>
 
-      <!-- 选择笔记ID/链接列 -->
+      <!-- 选择笔记链接列 -->
       <div style="margin-bottom: 20px;">
-        <label style="display: block; font-size: 14px; font-weight: 500; color: #333; margin-bottom: 8px;">请选择笔记ID/链接所在列</label>
+        <label style="display: block; font-size: 14px; font-weight: 500; color: #333; margin-bottom: 8px;">请选择笔记链接所在列</label>
         <select id="noteIdColumnSelect" style="width: 100%; padding: 10px 12px; border: 1px solid #d9d9d9; border-radius: 6px; font-size: 14px; color: #333; background: white; cursor: pointer;" disabled>
           <option value="">请先选择表格</option>
         </select>
-        <div style="font-size: 12px; color: #999; margin-top: 6px;">提示：选择包含小红书笔记ID或链接的列</div>
+        <div style="font-size: 12px; color: #999; margin-top: 6px;">提示：选择包含笔记链接的列</div>
       </div>
 
       <!-- 处理的数据选项 -->
@@ -2012,8 +2031,7 @@
         <!-- 博主链接输入 -->
         <div style="margin-bottom: 20px;">
           <label style="display: block; font-size: 14px; font-weight: 500; color: #333; margin-bottom: 8px;">博主链接</label>
-          <input type="text" id="bloggerUrlInput" placeholder="https://www.xiaohongshu.com/user/profile/... 或直接输入24位ID" style="width: 100%; padding: 12px; border: 2px solid #f0f0f0; border-radius: 8px; font-size: 14px;">
-          <div style="font-size: 12px; color: #999; margin-top: 6px;">支持 xiaohongshu.com 链接，或直接输入24位小红书博主ID</div>
+          <input type="text" id="bloggerUrlInput" placeholder="" style="width: 100%; padding: 12px; border: 2px solid #f0f0f0; border-radius: 8px; font-size: 14px;">
         </div>
 
         <!-- 获取模式选择 -->
@@ -2114,7 +2132,7 @@
       </h3>
       <div style="font-size: 13px; color: #666; line-height: 1.8; white-space: pre-line;" data-i18n="disclaimer.content">
         1. 本插件仅用于个人学习和研究目的,不得用于任何商业用途。<br>
-        2. 用户使用本插件采集的数据,应遵守小红书平台的相关规定和用户协议。<br>
+        2. 用户使用本插件采集的数据,应遵守平台的相关规定和用户协议。<br>
         3. 本插件不对采集内容的准确性、完整性和及时性承担责任。<br>
         4. 用户应妥善保管账号信息,因账号泄露造成的损失由用户自行承担。<br>
         5. 本插件尊重第三方知识产权,如涉及侵权请联系删除。<br>
