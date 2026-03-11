@@ -1690,7 +1690,7 @@
   </script>
   <script src="https://webapi.amap.com/maps?v=2.0&key=e3ce8a9c46647a767efedf92e0cefe23"></script>
   
-  <script type="module" crossorigin src="./assets/index.1e62c33b.js"></script>
+  <script type="module" crossorigin src="./assets/index.e829d11c.js"></script>
   <link rel="modulepreload" crossorigin href="./assets/vendor-lark.9e248cc2.js">
   <link rel="modulepreload" crossorigin href="./assets/vendor-jquery.88f4ff12.js">
   <link rel="modulepreload" crossorigin href="./assets/vendor-i18n.7cd67a60.js">
@@ -2402,6 +2402,57 @@
           <input type="text" id="remark" placeholder="请输入备注信息">
         </div>
 
+        <!-- 自动更新配置区域 -->
+        <div class="form-group" style="background: #f0f7ff; padding: 16px; border-radius: 8px; border: 1px solid #b3d9ff;">
+          <label style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <svg width="18" height="18" fill="none" stroke="#1890ff" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <span style="font-weight: 600; color: #333;" data-i18n="modal.autoUpdateConfig">自动更新配置</span>
+            </div>
+            <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; margin: 0;">
+              <input type="checkbox" id="autoUpdateEnabled" style="width: 18px; height: 18px; cursor: pointer;">
+              <span style="font-size: 14px; color: #666;" data-i18n="modal.enableAutoUpdate">启用自动更新</span>
+            </label>
+          </label>
+
+          <div id="autoUpdateConfigSection" style="display: none;">
+            <label style="display: block; font-size: 13px; font-weight: 500; color: #666; margin-bottom: 8px;" data-i18n="modal.updateTimePoints">
+              更新时间点
+            </label>
+
+            <div id="timePointsContainer" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px;">
+              <!-- 时间点列表将在这里动态生成 -->
+            </div>
+
+            <button type="button" id="addTimePointBtn" style="
+              width: 100%;
+              padding: 8px 12px;
+              font-size: 13px;
+              background: #fff;
+              border: 1px dashed #1890ff;
+              border-radius: 6px;
+              color: #1890ff;
+              cursor: pointer;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              gap: 6px;
+              transition: all 0.2s;
+            " onmouseover="this.style.background='#f0f7ff'" onmouseout="this.style.background='#fff'">
+              <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+              </svg>
+              <span data-i18n="modal.addTimePoint">添加时间点</span>
+            </button>
+
+            <div style="font-size: 12px; color: #999; margin-top: 10px; line-height: 1.6;">
+              <span data-i18n="modal.autoUpdateHint">提示：启用后，系统将在设定的时间点自动检查并更新小红书笔记数据到该表格</span>
+            </div>
+          </div>
+        </div>
+
         <!-- 字段选择区域 -->
         <div class="form-group" style="background: #fafafa; padding: 16px; border-radius: 8px; border: 1px solid #e8e8e8;">
           <label style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
@@ -2551,12 +2602,12 @@
         </div>
 
         <!-- 标签页功能说明区域 -->
-        <div id="tabFeatureSection" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; padding: 20px; margin-bottom: 20px; color: white;">
+        <div id="tabFeatureSection" style="display: none; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; padding: 20px; margin-bottom: 20px; color: white;">
           <!-- 内容将由JavaScript动态生成 -->
         </div>
 
         <!-- 产品列表 -->
-        <div id="productsList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-bottom: 16px;">
+        <div id="productsList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin-bottom: 16px;">
           <!-- 产品卡片将在这里动态生成 -->
         </div>
 
