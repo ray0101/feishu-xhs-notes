@@ -123,7 +123,7 @@ Important Notice: By using this plugin, you acknowledge that you have read, unde
         ${p?`<div style="position: absolute; top: 6px; left: 6px; ${C} color: white; padding: 3px 6px; border-radius: 4px; font-size: 10px; font-weight: 700; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">${p}</div>`:""}
         ${d?`<div style="position: absolute; top: 6px; right: 6px; background: linear-gradient(135deg, #ff6b6b 0%, #ff4d4f 100%); color: white; padding: 3px 6px; border-radius: 4px; font-size: 10px; font-weight: 700; box-shadow: 0 2px 4px rgba(255, 77, 79, 0.3);">-${l.discount}%</div>`:""}
 
-        <div style="margin-bottom: 8px;">
+        <div style="margin-bottom: 8px; padding-top: ${p||d?"18px":"0"};">
           ${D?`
           <div style="font-size: 24px; font-weight: 800; background: linear-gradient(135deg, ${a?"#f59e0b 0%, #dc2626":"#667eea 0%, #764ba2"} 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 4px;">
             ${D}
