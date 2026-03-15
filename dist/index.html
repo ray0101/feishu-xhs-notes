@@ -1690,7 +1690,7 @@
   </script>
   <script src="https://webapi.amap.com/maps?v=2.0&key=e3ce8a9c46647a767efedf92e0cefe23"></script>
   
-  <script type="module" crossorigin src="./assets/index.697a4863.js"></script>
+  <script type="module" crossorigin src="./assets/index.b65b0804.js"></script>
   <link rel="modulepreload" crossorigin href="./assets/vendor-lark.9e248cc2.js">
   <link rel="modulepreload" crossorigin href="./assets/vendor-jquery.88f4ff12.js">
   <link rel="modulepreload" crossorigin href="./assets/vendor-i18n.7cd67a60.js">
@@ -2125,14 +2125,14 @@
           <div style="font-size: 12px; color: #999; margin-top: 6px;">将获取最新日期的笔记到指定日期之间的笔记</div>
         </div>
 
-        <!-- 互动跟踪 -->
+        <!-- 完整数据选项 -->
         <div style="margin-bottom: 20px;">
           <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-            <input type="checkbox" id="enableInteractionTracking" style="width: 18px; height: 18px; cursor: pointer;">
-            <span style="font-size: 14px; font-weight: 500; color: #333;">启用互动跟踪(beta测试)</span>
+            <input type="checkbox" id="enableCompleteData" style="width: 18px; height: 18px; cursor: pointer;">
+            <span style="font-size: 14px; font-weight: 500; color: #333;">获取完整数据</span>
           </label>
           <div style="font-size: 12px; color: #999; margin-top: 6px; margin-left: 26px;">
-            已存在的记录只记录差值（如：20260204点赞数），新记录正常写入所有数据
+            勾选后将会循环获取完整笔记数据 每条数据额外消耗1次下载次数
           </div>
         </div>
 
@@ -2387,7 +2387,7 @@
 
         <div class="form-group">
           <label data-i18n="modal.personalBaseToken">Personal Base Token</label>
-          <input type="text" id="personalBaseToken" placeholder="请输入Personal Base Token" required>
+          <input type="text" id="personalBaseToken" placeholder="请输入授权码" required>
           <div class="form-hint" data-i18n="modal.personalBaseTokenHint">每个多维表格一个唯一标识</div>
         </div>
 
@@ -2416,6 +2416,10 @@
               <span style="font-size: 14px; color: #666;" data-i18n="modal.enableAutoUpdate">启用自动更新</span>
             </label>
           </label>
+
+          <div style="font-size: 12px; color: #666; margin-bottom: 12px; line-height: 1.6;">
+            将依据自动更新列值为"是"的笔记进行定时更新
+          </div>
 
           <div id="autoUpdateConfigSection" style="display: none;">
             <label style="display: block; font-size: 13px; font-weight: 500; color: #666; margin-bottom: 8px;" data-i18n="modal.updateTimePoints">
