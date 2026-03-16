@@ -1690,7 +1690,7 @@
   </script>
   <script src="https://webapi.amap.com/maps?v=2.0&key=e3ce8a9c46647a767efedf92e0cefe23"></script>
   
-  <script type="module" crossorigin src="./assets/index.b65b0804.js"></script>
+  <script type="module" crossorigin src="./assets/index.83e8213a.js"></script>
   <link rel="modulepreload" crossorigin href="./assets/vendor-lark.9e248cc2.js">
   <link rel="modulepreload" crossorigin href="./assets/vendor-jquery.88f4ff12.js">
   <link rel="modulepreload" crossorigin href="./assets/vendor-i18n.7cd67a60.js">
@@ -1748,6 +1748,15 @@
           <div style="text-align: center;">
             <div style="font-size: 12px; color: #666; margin-bottom: 4px;" data-i18n="userInfo.boundTables">已绑定表格</div>
             <div id="boundTableCount" style="font-size: 18px; font-weight: 600; color: #1890ff; cursor: pointer; text-decoration: underline;">-</div>
+          </div>
+
+          <!-- 签到状态 -->
+          <div style="text-align: center;">
+            <div style="font-size: 12px; color: #666; margin-bottom: 4px;" data-i18n="userInfo.signIn">签到</div>
+            <button id="signInBtn" class="button button-primary button-small" style="padding: 6px 12px; font-size: 12px; min-width: 80px;">
+              <span id="signInText">签到</span>
+            </button>
+            <div id="signInReward" style="font-size: 11px; color: #ff9800; margin-top: 4px; display: none;"></div>
           </div>
 
           <!-- 操作按钮 -->
