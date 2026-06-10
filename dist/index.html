@@ -1192,7 +1192,7 @@
       overflow-y: auto;
       padding: 12px;
       display: flex;
-      flex-direction: column-reverse;
+      flex-direction: column;
       gap: 8px;
     }
 
@@ -1509,23 +1509,6 @@
       margin-top: 2px;
     }
 
-    /* AI分析失败项样式 */
-    .failure-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      padding: 12px;
-      background: white;
-      border-radius: 8px;
-      margin-bottom: 8px;
-      border: 1px solid #f0f0f0;
-      transition: all 0.2s ease;
-    }
-
-    .failure-item:hover {
-      background: #fff5f5;
-      border-color: #ffebeb;
-    }
 
     .failure-number {
       flex-shrink: 0;
@@ -1690,7 +1673,7 @@
   </script>
   <script src="https://webapi.amap.com/maps?v=2.0&key=e3ce8a9c46647a767efedf92e0cefe23"></script>
   
-  <script type="module" crossorigin src="./assets/index.83e8213a.js"></script>
+  <script type="module" crossorigin src="./assets/index.4a66613b.js"></script>
   <link rel="modulepreload" crossorigin href="./assets/vendor-lark.9e248cc2.js">
   <link rel="modulepreload" crossorigin href="./assets/vendor-jquery.88f4ff12.js">
   <link rel="modulepreload" crossorigin href="./assets/vendor-i18n.7cd67a60.js">
@@ -1722,11 +1705,6 @@
 
         <!-- 右侧：统计信息和操作按钮 -->
         <div style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
-          <!-- 当月AI算力值 -->
-          <div id="todayDownloadQuotaContainer" style="text-align: center;">
-            <div style="font-size: 12px; color: #666; margin-bottom: 4px;">当月AI算力值</div>
-            <div id="todayDownloadQuota" style="font-size: 18px; font-weight: 600; color: #333;">-</div>
-          </div>
 
           <!-- 提取额度 -->
           <div style="text-align: center;">
@@ -1762,6 +1740,7 @@
           <!-- 操作按钮 -->
           <div style="display: flex; gap: 8px;">
             <button id="rechargeDownloadsBtn" class="button button-primary button-small" style="padding: 6px 12px; font-size: 12px;" data-i18n="buttons.personalCenter">个人中心</button>
+            <button id="xhsBindBtn" class="button button-secondary button-small" style="padding: 6px 12px; font-size: 12px; background: linear-gradient(135deg, #ff2442 0%, #ff6b6b 100%); color: white; border: none;">绑定账号</button>
             <button id="switchAccountBtn" class="button button-secondary button-small" style="padding: 6px 12px; font-size: 12px;" data-i18n="buttons.clearCache">清除缓存</button>
           </div>
         </div>
@@ -1797,17 +1776,17 @@
         </svg>
         <span data-i18n="tabs.bloggerNotes">博主笔记</span>
       </button>
-      <button class="tab-button menu-type-3" data-tab="ai-analysis">
-        <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
-        </svg>
-        <span data-i18n="tabs.aiAnalysis">AI分析</span>
-      </button>
       <button class="tab-button menu-type-4" data-tab="automation" style="display: none;">
         <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
         </svg>
         <span data-i18n="tabs.automation">自动化</span>
+      </button>
+      <button class="tab-button menu-type-5" data-tab="usage-logs">
+        <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+        </svg>
+        <span data-i18n="tabs.usageLogs">消耗明细</span>
       </button>
     </div>
 
@@ -1843,6 +1822,47 @@
           <option value="">请先选择表格</option>
         </select>
         <div style="font-size: 12px; color: #999; margin-top: 6px;">提示：选择包含笔记链接的列</div>
+      </div>
+
+      <!-- 笔记数据获取选项 -->
+      <div style="margin-bottom: 20px;">
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <!-- 获取笔记详细信息 -->
+          <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+            <input type="checkbox" id="enableNoteDetail" style="width: 18px; height: 18px; cursor: pointer;" checked>
+            <span style="font-size: 14px; font-weight: 500; color: #333;">获取笔记详细信息</span>
+            <span style="font-size: 12px; color: #ff6b2e; margin-left: 2px;">消耗1算力值</span>
+          </label>
+
+          <!-- 获取笔记浏览数据 -->
+          <div>
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+              <input type="checkbox" id="enableNoteExposure" style="width: 18px; height: 18px; cursor: pointer;">
+              <span style="font-size: 14px; font-weight: 500; color: #333;">获取笔记浏览数据</span>
+              <span style="font-size: 12px; color: #ff6b2e; margin-left: 2px;">消耗1算力值</span>
+            </label>
+            <div style="font-size: 12px; color: #999; margin-top: 4px; margin-left: 26px;">获取笔记的浏览数、曝光量等数据（需绑定账号，需绑定笔记的作者才可以获取详细数据否则获取不到）</div>
+            <!-- 绑定账号选择 -->
+            <div id="noteExposureBindContainer" style="display:none; margin: 8px 0 0 26px;">
+              <label style="display: block; font-size: 12px; color: #666; margin-bottom: 4px;">选择绑定账号</label>
+              <select id="noteExposureBindSelect" style="width: 100%; padding: 8px 10px; border: 2px solid #f0f0f0; border-radius: 6px; font-size: 13px; max-width: 300px;">
+              </select>
+            </div>
+            <!-- 字段选择面板 -->
+            <div id="noteExposureFieldsPanel" style="display:none; margin: 8px 0 0 26px; padding: 10px 12px; background: #fafafa; border-radius: 8px; border: 1px solid #f0f0f0;">
+              <div id="noteExposureFieldsToggle" style="cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 13px; color: #333; font-weight: 500; user-select: none;">
+                <span id="noteExposureFieldsToggleIcon">▶</span>
+                <span>选择要获取的浏览数据字段</span>
+              </div>
+              <div id="noteExposureFieldsGrid" style="display:none; margin-top: 10px; display: none; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 6px;">
+              </div>
+              <div id="noteExposureFieldsActions" style="display:none; margin-top: 8px; display: none; gap: 8px;">
+                <button id="selectAllNoteExposureBtn" style="padding: 4px 12px; font-size: 12px; border: 1px solid #d9d9d9; border-radius: 4px; background: white; cursor: pointer;">全选</button>
+                <button id="deselectAllNoteExposureBtn" style="padding: 4px 12px; font-size: 12px; border: 1px solid #d9d9d9; border-radius: 4px; background: white; cursor: pointer;">清空</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- 处理的数据选项 -->
@@ -1881,7 +1901,7 @@
               <div id="selectedTableId" style="font-size: 14px; color: #333; word-break: break-all;">-</div>
             </div>
             <div>
-              <div style="font-size: 12px; color: #999; margin-bottom: 4px;" data-i18n="existingTable.xhsId">小红书号</div>
+              <div style="font-size: 12px; color: #999; margin-bottom: 4px;" data-i18n="existingTable.xhsId">博主ID</div>
               <div id="selectedXhsId" style="font-size: 14px; color: #333;">-</div>
             </div>
           </div>
@@ -2105,10 +2125,35 @@
     <div id="blogger-notes-tab" class="tab-content">
       <!-- 博主笔记表单 -->
       <div class="blogger-notes-form-container">
+        <!-- 笔记来源选择 -->
+        <div id="bloggerSourceTypeContainer" style="margin-bottom: 20px;">
+          <label style="display: block; font-size: 14px; font-weight: 500; color: #333; margin-bottom: 8px;">笔记来源</label>
+          <div style="display: flex; gap: 16px; padding: 8px 12px; background: #fafafa; border-radius: 8px; border: 1px solid #e8e8e8;">
+            <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+              <input type="radio" name="bloggerSourceType" value="url" checked style="cursor: pointer;">
+              <span style="font-size: 14px; color: #333;">手动输入链接</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+              <input type="radio" name="bloggerSourceType" value="bind" style="cursor: pointer;">
+              <span style="font-size: 14px; color: #333;">已绑定账号</span>
+            </label>
+          </div>
+        </div>
+
         <!-- 博主链接输入 -->
-        <div style="margin-bottom: 20px;">
+        <div id="bloggerUrlInputContainer" style="margin-bottom: 20px;">
           <label style="display: block; font-size: 14px; font-weight: 500; color: #333; margin-bottom: 8px;">博主链接</label>
           <input type="text" id="bloggerUrlInput" placeholder="" style="width: 100%; padding: 12px; border: 2px solid #f0f0f0; border-radius: 8px; font-size: 14px;">
+        </div>
+
+        <!-- 已绑定账号选择 -->
+        <div id="bloggerBindUserContainer" style="margin-bottom: 20px; display: none;">
+          <label style="display: block; font-size: 14px; font-weight: 500; color: #333; margin-bottom: 8px;">选择已绑定账号</label>
+          <select id="bloggerBindUserSelect" style="width: 100%; padding: 10px 12px; border: 2px solid #f0f0f0; border-radius: 8px; font-size: 14px;">
+            <option value="">请先绑定账号</option>
+          </select>
+          <div style="font-size: 12px; color: #999; margin-top: 6px;">提示：在"个人中心"旁点击"绑定账号"按钮进行扫码绑定</div>
+        </div>
         </div>
 
         <!-- 获取模式选择 -->
@@ -2138,10 +2183,35 @@
         <div style="margin-bottom: 20px;">
           <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
             <input type="checkbox" id="enableCompleteData" style="width: 18px; height: 18px; cursor: pointer;">
-            <span style="font-size: 14px; font-weight: 500; color: #333;">获取完整数据</span>
+            <span id="completeDataLabel" style="font-size: 14px; font-weight: 500; color: #333;">获取完整数据</span>
+            <span style="font-size: 12px; color: #ff6b2e; margin-left: 2px;">消耗1算力值</span>
+          </label>
+          <div id="completeDataHint" style="font-size: 12px; color: #999; margin-top: 6px; margin-left: 26px;">
+            勾选后将会循环获取完整笔记数据 每条数据额外消耗1次下载次数
+          </div>
+        </div>
+
+        <!-- 笔记浏览曝光数据选项（已绑定账号时显示） -->
+        <div id="bloggerExposureDataContainer" style="margin-bottom: 20px; display: none;">
+          <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+            <input type="checkbox" id="enableExposureData" style="width: 18px; height: 18px; cursor: pointer;">
+            <span style="font-size: 14px; font-weight: 500; color: #333;">笔记浏览曝光数据</span>
+            <span style="font-size: 12px; color: #ff6b2e; margin-left: 2px;">消耗1算力值</span>
           </label>
           <div style="font-size: 12px; color: #999; margin-top: 6px; margin-left: 26px;">
-            勾选后将会循环获取完整笔记数据 每条数据额外消耗1次下载次数
+            获取笔记的浏览数、曝光量等数据（仅已绑定账号可用）
+          </div>
+          <!-- 曝光数据字段选择（可折叠） -->
+          <div id="exposureFieldsPanel" style="margin-top: 12px; margin-left: 26px; display: none;">
+            <div id="exposureFieldsToggle" style="font-size: 13px; color: #1890ff; cursor: pointer; margin-bottom: 8px; user-select: none;">
+              ▶ 选择要获取的曝光数据字段
+            </div>
+            <div id="exposureFieldsGrid" style="display: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 6px; padding: 8px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e8e8e8;">
+            </div>
+            <div id="exposureFieldsActions" style="display: none; margin-top: 8px; gap: 8px;">
+              <button type="button" id="selectAllExposureBtn" class="button button-secondary button-small" style="padding: 4px 12px; font-size: 12px;">全选</button>
+              <button type="button" id="deselectAllExposureBtn" class="button button-secondary button-small" style="padding: 4px 12px; font-size: 12px;">清空</button>
+            </div>
           </div>
         </div>
 
@@ -2168,91 +2238,8 @@
           开始获取博主笔记
         </button>
       </div>
-    </div>
+    
 
-    <!-- Tab 4: AI分析 -->
-    <div id="ai-analysis-tab" class="tab-content">
-      <!-- AI分析表单 -->
-      <div class="ai-analysis-form-container">
-        <!-- 使用提示 -->
-        <div style="margin-bottom: 20px; padding: 12px 16px; background: #fffbe6; border: 1px solid #ffe58f; border-radius: 8px;">
-          <div style="display: flex; align-items: flex-start; gap: 8px;">
-            <svg width="20" height="20" fill="none" stroke="#faad14" viewBox="0 0 24 24" style="flex-shrink: 0; margin-top: 2px;">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
-            <div style="flex: 1; font-size: 13px; color: #666; line-height: 1.6;">
-              <strong style="color: #333;">使用步骤：</strong>
-              <ol style="margin: 8px 0 0 0; padding-left: 20px;">
-                <li style="margin-bottom: 4px;">选择表格、视图和笔记ID字段</li>
-                <li style="margin-bottom: 4px;">在飞书表格中<b>勾选</b>要分析的记录</li>
-                <li style="margin-bottom: 4px;">点击"开始AI分析"按钮</li>
-              </ol>
-              <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #ffe58f;">
-                <strong style="color: #333;">⚠️ 注意事项：</strong>
-                <ul style="margin: 8px 0 0 0; padding-left: 20px;">
-                  <li style="margin-bottom: 4px;">每条笔记分析需要约 <strong>1-2分钟</strong></li>
-                  <li style="margin-bottom: 4px;">如果显示超时，可能是服务器繁忙，请稍后重试</li>
-                  <li style="margin-bottom: 0;">分析会消耗 <strong>AI算力值</strong>，请确保有足够额度</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div style="margin-bottom: 20px;">
-          <label style="display: block; font-size: 14px; font-weight: 500; color: #333; margin-bottom: 8px;" data-i18n="aiAnalysis.selectTable">选择数据表</label>
-          <select id="aiAnalysisTable" style="width: 100%; padding: 10px 12px; border: 2px solid #f0f0f0; border-radius: 8px; font-size: 14px;">
-            <option value="" data-i18n="aiAnalysis.selectPlaceholder">请选择表格</option>
-          </select>
-        </div>
-
-        <div style="margin-bottom: 20px;">
-          <label style="display: block; font-size: 14px; font-weight: 500; color: #333; margin-bottom: 8px;" data-i18n="existingTable.selectView">选择视图</label>
-          <select id="aiAnalysisView" style="width: 100%; padding: 10px 12px; border: 2px solid #f0f0f0; border-radius: 8px; font-size: 14px;">
-            <option value="" data-i18n="existingTable.pleaseSelectTableFirst">请先选择表格</option>
-          </select>
-        </div>
-
-        <div style="margin-bottom: 20px;">
-          <label style="display: block; font-size: 14px; font-weight: 500; color: #333; margin-bottom: 8px;" data-i18n="aiAnalysis.noteIdField">笔记ID字段</label>
-          <select id="aiAnalysisNoteIdField" style="width: 100%; padding: 10px 12px; border: 2px solid #f0f0f0; border-radius: 8px; font-size: 14px;">
-            <option value="" data-i18n="aiAnalysis.selectField">请选择字段</option>
-          </select>
-          <div style="font-size: 12px; color: #999; margin-top: 6px;" data-i18n="aiAnalysis.noteIdFieldHint">选择包含笔记ID或笔记链接的字段</div>
-        </div>
-
-        <div style="margin-bottom: 20px;">
-          <label style="display: block; font-size: 14px; font-weight: 500; color: #333; margin-bottom: 8px;" data-i18n="aiAnalysis.analysisType">分析类型</label>
-          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
-            <label style="display: flex; align-items: center; gap: 8px; padding: 12px; background: #fafafa; border: 2px solid #f0f0f0; border-radius: 8px; cursor: pointer; transition: all 0.2s;">
-              <input type="checkbox" name="analysisType" value="cover" checked disabled style="cursor: default;">
-              <span style="font-size: 14px; color: #333;" data-i18n="aiAnalysis.cover">封面分析</span>
-            </label>
-            <label style="display: flex; align-items: center; gap: 8px; padding: 12px; background: #fafafa; border: 2px solid #f0f0f0; border-radius: 8px; cursor: pointer; transition: all 0.2s;">
-              <input type="checkbox" name="analysisType" value="comprehensive" checked disabled style="cursor: default;">
-              <span style="font-size: 14px; color: #333;" data-i18n="aiAnalysis.comprehensive">笔记综合分析</span>
-            </label>
-          </div>
-        </div>
-
-        <div style="margin-bottom: 20px;">
-          <label style="display: flex; align-items: center; gap: 8px; padding: 12px; background: #f0f9ff; border: 2px solid #bae6fd; border-radius: 8px; opacity: 0.7;">
-            <input type="checkbox" id="aiAnalysisSaveResult" checked disabled style="cursor: default;">
-            <span style="font-size: 14px; color: #333;" data-i18n="aiAnalysis.saveResult">保存分析结果到表格（自动选择）</span>
-            </label>
-        </div>
-      </div>
-
-      <!-- 悬浮在底部的开始分析按钮 -->
-      <div id="aiAnalysisFloatingButton" style="display: none; position: fixed; bottom: 0; left: 0; right: 0; padding: 16px 24px; background: linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255,255,255,0.95) 70%, transparent 100%); text-align: center; z-index: 100;">
-        <button id="startAiAnalysisBtn" class="button button-primary" style="padding: 14px 48px; font-size: 16px; font-weight: 600; border-radius: 50px; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
-          <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="display: inline-block; vertical-align: middle; margin-right: 6px;">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
-          </svg>
-          <span data-i18n="aiAnalysis.startAnalysis">开始AI分析</span>
-        </button>
-      </div>
-    </div>
 
     <!-- Tab 5: 自动化 -->
     <div id="automation-tab" class="tab-content">
@@ -2321,6 +2308,30 @@
       </div>
     </div>
 
+    <!-- Tab 6: 消耗明细 -->
+    <div id="usage-logs-tab" class="tab-content">
+      <div style="margin-bottom: 16px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+        <label style="font-size: 14px; font-weight: 500; color: #333;">操作类型：</label>
+        <select id="usageLogTypeFilter" style="padding: 8px 12px; border: 2px solid #f0f0f0; border-radius: 8px; font-size: 14px;">
+          <option value="">全部</option>
+          <option value="note">笔记详情</option>
+          <option value="notes">博主笔记/搜索</option>
+          <option value="table_push">表格推送</option>
+          <option value="batch_push">批量推送</option>
+        </select>
+      </div>
+
+      <div id="usageLogsBody" style="border: 1px solid #f0f0f0; border-radius: 8px; overflow: hidden; background: #fff;">
+        <div style="text-align: center; padding: 40px; color: #999;">加载中...</div>
+      </div>
+
+      <div id="usageLogsPagination" style="display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 20px;">
+        <button id="usageLogsPrevBtn" class="button button-secondary button-small" disabled>上一页</button>
+        <span id="usageLogsPageInfo" style="font-size: 13px; color: #666;">-</span>
+        <button id="usageLogsNextBtn" class="button button-secondary button-small" disabled>下一页</button>
+      </div>
+    </div>
+
     <!-- 统一的字段选择区域 -->
     <div class="fields-showcase" id="universalFieldsShowcase" style="margin-top: 32px;">
       <div class="fields-showcase-header">
@@ -2365,7 +2376,7 @@
       </div>
     </div>
   </div>
-
+</div>
   <!-- 绑定模态框 -->
   <div id="bindModal" class="modal-overlay">
     <div class="modal" style="position: relative;">
@@ -2375,7 +2386,7 @@
           <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
           </svg>
-          <span id="modalTitle" data-i18n="modal.bindTitle">绑定小红书账号</span>
+          <span id="modalTitle" data-i18n="modal.bindTitle">绑定账号</span>
         </div>
         <a href="https://hwec94xy3tc.feishu.cn/wiki/space/7597234691472673999?ccm_open_type=lark_wiki_spaceLink&open_tab_from=wiki_home" target="_blank" title="帮助" style="color: #1890ff; text-decoration: none; display: flex; align-items: center; gap: 4px; font-size: 14px; cursor: pointer;">
           <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -2401,9 +2412,9 @@
         </div>
 
         <div class="form-group">
-          <label data-i18n="modal.xhsUrl">小红书绑定(绑定后该账号转发至小助手的笔记会自动推送到该表格)</label>
+          <label data-i18n="modal.xhsUrl">账号绑定(绑定后该账号转发至小助手的笔记会自动推送到该表格)</label>
           <input type="text" id="xhsUrl" placeholder="https://www.xiaohongshu.com/user/profile/... 或直接输入24位ID">
-          <div class="form-hint" data-i18n="modal.xhsUrlHint">支持 xiaohongshu.com 或 xhslink.com 链接，或直接输入24位小红书ID</div>
+          <div class="form-hint" data-i18n="modal.xhsUrlHint">支持相关链接或直接输入24位账号ID</div>
         </div>
 
         <div class="form-group">
@@ -2461,7 +2472,7 @@
             </button>
 
             <div style="font-size: 12px; color: #999; margin-top: 10px; line-height: 1.6;">
-              <span data-i18n="modal.autoUpdateHint">提示：启用后，系统将在设定的时间点自动检查并更新小红书笔记数据到该表格</span>
+              <span data-i18n="modal.autoUpdateHint">提示：启用后，系统将在设定的时间点自动检查并更新笔记数据到该表格</span>
             </div>
           </div>
         </div>
@@ -2493,7 +2504,7 @@
               <span data-i18n="modal.tableId">Table ID</span>: <span id="displayTableId" style="font-family: monospace; color: #ff2442;">-</span>
             </div>
             <div style="margin-top: 4px;">
-              <span data-i18n="modal.xhsId">XHS ID</span>: <span id="displayXhsId" style="font-family: monospace; color: #ff2442;">-</span>
+              <span data-i18n="modal.xhsId">账号ID</span>: <span id="displayXhsId" style="font-family: monospace; color: #ff2442;">-</span>
             </div>
           </div>
         </div>
@@ -2523,6 +2534,7 @@
       </div>
     </div>
   </div>
+
 
   <!-- 充值弹窗 -->
   <div id="rechargeModal" class="modal-overlay">
@@ -2561,7 +2573,16 @@
             <span id="rechargeEmail" style="font-size: 14px; font-weight: 600; color: #333;">未绑定</span>
             <button id="bindEmailBtn" class="button button-primary button-small" style="padding: 4px 10px; font-size: 12px; margin-left: 4px;">绑定</button>
           </div>
-          <!-- 第三行：SVIP到期时间 -->
+          <!-- 第三行：小红书账号绑定 -->
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+            <svg width="16" height="16" fill="none" stroke="#ff2442" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+            </svg>
+            <span style="font-size: 13px; color: #666;">账号:</span>
+            <span id="rechargeXhsBinding" style="font-size: 14px; font-weight: 600; color: #333;">未绑定</span>
+            <button id="rechargeXhsBindBtn" class="button button-primary button-small" style="padding: 4px 10px; font-size: 12px; margin-left: 4px;">绑定</button>
+          </div>
+          <!-- 第四行：SVIP到期时间 -->
           <div style="display: flex; align-items: center; gap: 8px;">
             <svg width="16" height="16" fill="none" stroke="#666" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
@@ -2886,6 +2907,22 @@
     </div>
   </div>
 
+  <!-- 余额不足弹窗 -->
+  <div id="insufficientBalanceModal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:10003; align-items:center; justify-content:center;">
+    <div style="background:white; border-radius:16px; padding:40px; max-width:420px; width:90%; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+      <div style="width:72px; height:72px; margin:0 auto 20px; background:linear-gradient(135deg,#faad14,#ff4d4f); border-radius:50%; display:flex; align-items:center; justify-content:center;">
+        <svg width="36" height="36" fill="none" stroke="white" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+        </svg>
+      </div>
+      <h3 style="font-size:20px; font-weight:700; color:#333; margin-bottom:12px;" data-i18n="progress.insufficientBalance">AI算力值不足，请充值后继续</h3>
+      <p style="font-size:14px; color:#999; margin-bottom:28px; line-height:1.6;" data-i18n="progress.balanceTooLow">剩余下载次数不足</p>
+      <div id="insufficientBalanceActions" style="display:flex; flex-direction:column; gap:12px;">
+        <!-- 动态填充按钮 -->
+      </div>
+    </div>
+  </div>
+
   <!-- 博主笔记进度模态框 -->
   <div id="bloggerProgressModal" class="progress-modal-overlay" style="display: none;">
     <div class="progress-modal-content" style="max-width: 600px;">
@@ -2999,119 +3036,6 @@
     </div>
   </div>
 
-  <!-- AI分析进度模态框 -->
-  <div id="aiAnalysisProgressModal" class="progress-modal-overlay" style="display: none;">
-    <div class="progress-modal-content" style="max-width: 600px;">
-      <!-- 头部 -->
-      <div class="progress-header">
-        <div class="progress-title">
-          <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
-          </svg>
-          <span>AI分析中...</span>
-        </div>
-      </div>
-
-      <!-- 进度信息 -->
-      <div class="progress-info-section">
-        <!-- 警告提示 -->
-        <div style="background: #fff3cd; border: 1px solid #ffc107; border-radius: 8px; padding: 12px 16px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
-          <span style="font-size: 20px;">⚠️</span>
-          <div style="flex: 1;">
-            <div style="font-size: 14px; font-weight: 600; color: #856404; margin-bottom: 4px;">正在执行AI分析</div>
-            <div style="font-size: 13px; color: #856404;">请勿关闭或刷新页面，否则分析任务将中断</div>
-          </div>
-        </div>
-
-        <!-- 当前进度 -->
-        <div class="progress-current-item">
-          <div class="progress-emoji">🧠</div>
-          <div class="progress-text" id="aiAnalysisCurrentStatus">正在分析中...</div>
-        </div>
-
-        <!-- 进度条 -->
-        <div class="progress-bar-container">
-          <div class="progress-bar-wrapper">
-            <div class="progress-bar" id="aiAnalysisProgressBar">
-              <div class="progress-bar-gradient"></div>
-            </div>
-          </div>
-          <div class="progress-percentage" id="aiAnalysisProgressPercentage">0%</div>
-        </div>
-
-        <!-- 详细统计 -->
-        <div class="progress-stats">
-          <div class="stat-item">
-            <div class="stat-icon">📊</div>
-            <div class="stat-content">
-              <div class="stat-label">总数</div>
-              <div class="stat-value" id="aiAnalysisTotalCount">0</div>
-            </div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-icon">✅</div>
-            <div class="stat-content">
-              <div class="stat-label">已完成</div>
-              <div class="stat-value" id="aiAnalysisCompletedCount">0</div>
-            </div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-icon">⏳</div>
-            <div class="stat-content">
-              <div class="stat-label">分析中</div>
-              <div class="stat-value" id="aiAnalysisPendingCount">0</div>
-            </div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-icon">❌</div>
-            <div class="stat-content">
-              <div class="stat-label">失败</div>
-              <div class="stat-value" id="aiAnalysisFailedCount">0</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 当前分析的笔记信息 -->
-        <div class="current-note-info" id="aiAnalysisCurrentNoteInfo">
-          <div class="note-info-label">
-            <span style="font-size: 14px;">📌</span>
-            <span>当前笔记</span>
-          </div>
-          <div class="note-info-content" id="aiAnalysisCurrentNoteId">-</div>
-        </div>
-
-        <!-- 预计时间 -->
-        <div style="text-align: center; margin-top: 16px; padding: 12px; background: #f0f9ff; border-radius: 8px;">
-          <div style="font-size: 13px; color: #666;">预计完成时间</div>
-          <div id="aiAnalysisEstimatedTime" style="font-size: 18px; font-weight: 600; color: #1890ff; margin-top: 4px;">计算中...</div>
-        </div>
-      </div>
-
-      <!-- 完成总结（初始隐藏） -->
-      <div class="progress-summary" id="aiAnalysisSummary" style="display: none;">
-        <div class="summary-icon">🎉</div>
-        <div class="summary-title">AI分析完成！</div>
-        <div class="summary-stats" id="aiAnalysisSummaryStats">
-          <!-- 动态生成统计信息 -->
-        </div>
-
-        <!-- 失败原因列表（初始隐藏） -->
-        <div id="aiAnalysisFailureSection" style="display: none; margin-top: 20px; padding-top: 20px; border-top: 1px solid #f0f0f0;">
-          <div style="font-size: 14px; font-weight: 600; color: #333; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-            <svg width="16" height="16" fill="none" stroke="#ff4d4f" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
-            <span>失败详情</span>
-          </div>
-          <div id="aiAnalysisFailureList" style="max-height: 200px; overflow-y: auto;">
-            <!-- 动态生成失败记录 -->
-          </div>
-        </div>
-
-        <button class="summary-close-button" id="closeAiAnalysisProgressModalBtn">关闭</button>
-      </div>
-    </div>
-  </div>
 
   <!-- 邮箱绑定弹窗 -->
   <div id="emailBindingModal" class="modal-overlay">
@@ -3196,6 +3120,76 @@
               <button class="button button-secondary" onclick="unbindPhone()" style="padding: 10px 24px;">解绑手机号</button>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 小红书扫码绑定弹窗 -->
+  <div id="xhsBindingModal" class="modal-overlay">
+    <div class="modal" style="max-width: 480px;">
+      <button class="modal-close" onclick="closeXhsBindingModal()">&times;</button>
+      <div class="modal-header">
+        <h2>绑定账号</h2>
+      </div>
+      <div style="padding: 24px;">
+        <!-- 已绑定账号列表区域（有绑定时显示） -->
+        <div id="xhsBoundListSection" style="display: none;">
+          <div style="margin-bottom: 16px;">
+            <div style="font-size: 14px; font-weight: 600; color: #333; margin-bottom: 12px;">已绑定账号</div>
+            <div id="xhsBoundList" style="display: flex; flex-direction: column; gap: 8px;">
+            </div>
+          </div>
+          <div style="display: flex; gap: 12px; justify-content: center; padding-top: 12px; border-top: 1px solid #e8e8e8;">
+            <button class="button button-secondary" style="padding: 8px 24px;" onclick="closeXhsBindingModal()">关闭</button>
+            <button id="xhsAddNewBtn" class="button button-primary" style="padding: 8px 24px; background: linear-gradient(135deg, #ff2442 0%, #ff6b6b 100%); border: none;">添加新账号</button>
+          </div>
+        </div>
+
+        <!-- 免责声明区域 -->
+        <div id="xhsDisclaimerSection">
+          <div style="text-align: center; margin-bottom: 20px;">
+            <svg width="48" height="48" fill="none" stroke="#faad14" viewBox="0 0 24 24" style="margin-bottom: 12px;">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+            </svg>
+            <h3 style="font-size: 16px; color: #333; margin-bottom: 12px;">温馨提示</h3>
+            <p style="font-size: 14px; color: #666; line-height: 1.8; margin-bottom: 8px;">
+              该功能仅用于<strong style="color: #ff2442;">获取你自己笔记的分析数据</strong>，不会用于其他用途。
+            </p>
+            <p style="font-size: 13px; color: #999; line-height: 1.6;">
+              请使用你自己的 App 扫描二维码进行授权绑定。<br>请勿绑定他人账号。
+            </p>
+          </div>
+          <div style="display: flex; gap: 12px; justify-content: center;">
+            <button id="xhsCancelBtn" class="button button-secondary" style="padding: 10px 32px;" onclick="closeXhsBindingModal()">取消</button>
+            <button id="xhsAgreeBtn" class="button button-primary" style="padding: 10px 32px; background: linear-gradient(135deg, #ff2442 0%, #ff6b6b 100%); border: none;">同意并继续</button>
+          </div>
+        </div>
+
+        <!-- 二维码区域（初始隐藏） -->
+        <div id="xhsQrcodeSection" style="display: none;">
+          <div style="text-align: center;">
+            <div style="display: inline-block; padding: 16px; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 16px;">
+              <img id="xhsQrcodeImage" src="" style="width: 200px; height: 200px; display: block;" alt="二维码">
+            </div>
+            <p style="font-size: 14px; color: #666; margin-bottom: 4px;">请使用<strong>App</strong>扫描二维码</p>
+            <p id="xhsQrcodeStatus" style="font-size: 13px; color: #999; margin-bottom: 12px;">等待扫码中...</p>
+            <button id="xhsQrcodeRefreshBtn" class="button button-secondary button-small" style="padding: 6px 16px; font-size: 12px;">刷新二维码</button>
+          </div>
+        </div>
+
+        <!-- 绑定成功区域（初始隐藏） -->
+        <div id="xhsBindSuccessSection" style="display: none; text-align: center;">
+          <div style="margin-bottom: 16px;">
+            <svg width="56" height="56" fill="none" stroke="#52c41a" viewBox="0 0 24 24" style="margin-bottom: 12px;">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <h3 style="font-size: 18px; color: #333; margin-bottom: 8px;">绑定成功！</h3>
+            <p style="font-size: 14px; color: #666;">
+              已成功绑定账号：<strong id="xhsBindSuccessName" style="color: #ff2442;">-</strong>
+            </p>
+          </div>
+          <button class="button button-primary" style="padding: 10px 32px;" onclick="closeXhsBindingModal()">完成</button>
         </div>
       </div>
     </div>
