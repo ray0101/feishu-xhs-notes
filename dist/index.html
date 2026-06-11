@@ -1673,7 +1673,7 @@
   </script>
   <script src="https://webapi.amap.com/maps?v=2.0&key=e3ce8a9c46647a767efedf92e0cefe23"></script>
   
-  <script type="module" crossorigin src="./assets/index.4a66613b.js"></script>
+  <script type="module" crossorigin src="./assets/index.3966d738.js"></script>
   <link rel="modulepreload" crossorigin href="./assets/vendor-lark.9e248cc2.js">
   <link rel="modulepreload" crossorigin href="./assets/vendor-jquery.88f4ff12.js">
   <link rel="modulepreload" crossorigin href="./assets/vendor-i18n.7cd67a60.js">
@@ -1839,7 +1839,7 @@
             <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
               <input type="checkbox" id="enableNoteExposure" style="width: 18px; height: 18px; cursor: pointer;">
               <span style="font-size: 14px; font-weight: 500; color: #333;">获取笔记浏览数据</span>
-              <span style="font-size: 12px; color: #ff6b2e; margin-left: 2px;">消耗1算力值</span>
+              <span style="font-size: 12px; color: #ff6b2e; margin-left: 2px;">消耗1算力值 会员免费</span>
             </label>
             <div style="font-size: 12px; color: #999; margin-top: 4px; margin-left: 26px;">获取笔记的浏览数、曝光量等数据（需绑定账号，需绑定笔记的作者才可以获取详细数据否则获取不到）</div>
             <!-- 绑定账号选择 -->
@@ -2196,10 +2196,7 @@
           <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
             <input type="checkbox" id="enableExposureData" style="width: 18px; height: 18px; cursor: pointer;">
             <span style="font-size: 14px; font-weight: 500; color: #333;">笔记浏览曝光数据</span>
-            <span style="font-size: 12px; color: #ff6b2e; margin-left: 2px;">消耗1算力值</span>
-          </label>
-          <div style="font-size: 12px; color: #999; margin-top: 6px; margin-left: 26px;">
-            获取笔记的浏览数、曝光量等数据（仅已绑定账号可用）
+            <span style="font-size: 12px; color: #ff6b2e; margin-left: 2px;">消耗1算力值 会员免费</span>
           </div>
           <!-- 曝光数据字段选择（可折叠） -->
           <div id="exposureFieldsPanel" style="margin-top: 12px; margin-left: 26px; display: none;">
@@ -3130,7 +3127,7 @@
     <div class="modal" style="max-width: 480px;">
       <button class="modal-close" onclick="closeXhsBindingModal()">&times;</button>
       <div class="modal-header">
-        <h2>绑定账号</h2>
+        <h2 style="font-size: 16px;">绑定账号（用于获取账号的笔记详细数据）</h2>
       </div>
       <div style="padding: 24px;">
         <!-- 已绑定账号列表区域（有绑定时显示） -->
@@ -3154,7 +3151,8 @@
             </svg>
             <h3 style="font-size: 16px; color: #333; margin-bottom: 12px;">温馨提示</h3>
             <p style="font-size: 14px; color: #666; line-height: 1.8; margin-bottom: 8px;">
-              该功能仅用于<strong style="color: #ff2442;">获取你自己笔记的分析数据</strong>，不会用于其他用途。
+              该功能仅用于<strong style="color: #ff2442;">获取你自己笔记的分析数据</strong>，不会用于其他用途。<br>
+              请勿频繁请求，由此产生的后果本插件不负责。
             </p>
             <p style="font-size: 13px; color: #999; line-height: 1.6;">
               请使用你自己的 App 扫描二维码进行授权绑定。<br>请勿绑定他人账号。
@@ -3174,7 +3172,7 @@
             </div>
             <p style="font-size: 14px; color: #666; margin-bottom: 4px;">请使用<strong>App</strong>扫描二维码</p>
             <p id="xhsQrcodeStatus" style="font-size: 13px; color: #999; margin-bottom: 12px;">等待扫码中...</p>
-            <button id="xhsQrcodeRefreshBtn" class="button button-secondary button-small" style="padding: 6px 16px; font-size: 12px;">刷新二维码</button>
+            <button id="xhsQrcodeRefreshBtn" class="button button-secondary button-small" style="padding: 6px 16px; font-size: 12px;">重新生成二维码</button>
           </div>
         </div>
 
