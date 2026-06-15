@@ -1673,7 +1673,7 @@
   </script>
   <script src="https://webapi.amap.com/maps?v=2.0&key=e3ce8a9c46647a767efedf92e0cefe23"></script>
   
-  <script type="module" crossorigin src="./assets/index.f0d884c0.js"></script>
+  <script type="module" crossorigin src="./assets/index.b6296c0f.js"></script>
   <link rel="modulepreload" crossorigin href="./assets/vendor-lark.9e248cc2.js">
   <link rel="modulepreload" crossorigin href="./assets/vendor-jquery.88f4ff12.js">
   <link rel="modulepreload" crossorigin href="./assets/vendor-i18n.7cd67a60.js">
@@ -1762,19 +1762,25 @@
         <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
         </svg>
-        <span data-i18n="tabs.singleNote">单品笔记</span>
+        <span data-i18n="tabs.singleNote">笔记</span>
       </button>
       <button class="tab-button menu-type-1" data-tab="keyword-search">
         <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
         </svg>
-        <span data-i18n="tabs.keywordSearch">关键词搜索</span>
+        <span data-i18n="tabs.keywordSearch">搜索</span>
       </button>
       <button class="tab-button menu-type-2" data-tab="blogger-notes">
         <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
         </svg>
-        <span data-i18n="tabs.bloggerNotes">博主笔记</span>
+        <span data-i18n="tabs.bloggerNotes">博主</span>
+      </button>
+      <button class="tab-button menu-type-6" data-tab="comments">
+        <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+        </svg>
+        <span data-i18n="tabs.comments">评论</span>
       </button>
       <button class="tab-button menu-type-4" data-tab="automation" style="display: none;">
         <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1786,7 +1792,7 @@
         <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
         </svg>
-        <span data-i18n="tabs.usageLogs">消耗明细</span>
+        <span data-i18n="tabs.usageLogs">明细</span>
       </button>
     </div>
 
@@ -1978,8 +1984,8 @@
             </select>
           </div>
 
-          <!-- 位置距离 -->
-          <div>
+          <!-- 位置距离（暂时隐藏，目前不用） -->
+          <div style="display: none;">
             <label style="display: block; font-size: 14px; font-weight: 500; color: #333; margin-bottom: 8px;">位置距离</label>
             <select id="searchLocationDistance" style="width: 100%; padding: 10px 12px; border: 2px solid #f0f0f0; border-radius: 8px; font-size: 14px;">
               <option value="不限">不限</option>
@@ -2236,6 +2242,126 @@
         </button>
       </div>
     
+
+
+    <!-- Tab: 评论 -->
+    <div id="comments-tab" class="tab-content">
+      <div class="comments-form-container">
+        <!-- 选择源表格 -->
+        <div style="margin-bottom: 20px;">
+          <label style="display: block; font-size: 14px; font-weight: 500; color: #333; margin-bottom: 8px;">选择处理的表格（数据来源）</label>
+          <select id="commentsSourceTableSelect" style="width: 100%; padding: 10px 12px; border: 2px solid #f0f0f0; border-radius: 8px; font-size: 14px;">
+            <option value="">请选择一个表格</option>
+          </select>
+        </div>
+
+        <!-- 选择笔记链接列 -->
+        <div style="margin-bottom: 20px;">
+          <label style="display: block; font-size: 14px; font-weight: 500; color: #333; margin-bottom: 8px;">请选择笔记链接所在列</label>
+          <select id="commentsNoteIdColumnSelect" style="width: 100%; padding: 10px 12px; border: 2px solid #f0f0f0; border-radius: 8px; font-size: 14px;" disabled>
+            <option value="">请先选择表格</option>
+          </select>
+        </div>
+
+        <!-- 数据范围 -->
+        <div style="margin-bottom: 20px;">
+          <label style="display: block; font-size: 14px; font-weight: 500; color: #333; margin-bottom: 8px;">需要获取哪些笔记</label>
+          <div style="display: flex; flex-direction: column; gap: 12px; padding: 12px; background: #fafafa; border-radius: 6px; border: 1px solid #e8e8e8;">
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 8px; background: white; border-radius: 4px; border: 1px solid #d9d9d9; transition: all 0.2s;">
+              <input type="radio" name="commentsDataRange" value="all" checked style="cursor: pointer;">
+              <span style="font-size: 14px; color: #333;">所有数据</span>
+              <span style="font-size: 12px; color: #999; margin-left: auto;">自动获取视图中的所有记录</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 8px; background: white; border-radius: 4px; border: 1px solid #d9d9d9; transition: all 0.2s;">
+              <input type="radio" name="commentsDataRange" value="selected" style="cursor: pointer;">
+              <span style="font-size: 14px; color: #333;">选中的数据</span>
+              <span style="font-size: 12px; color: #999; margin-left: auto;">只处理手动勾选的记录</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- 评论页数 -->
+        <div style="margin-bottom: 20px;">
+          <label style="display: block; font-size: 14px; font-weight: 500; color: #333; margin-bottom: 8px;">评论页数（每页15条）</label>
+          <select id="commentsPageCount" style="width: 100%; padding: 10px 12px; border: 2px solid #f0f0f0; border-radius: 8px; font-size: 14px;">
+            <option value="1">1页</option>
+            <option value="2">2页</option>
+            <option value="3">3页</option>
+            <option value="4">4页</option>
+            <option value="5">5页</option>
+            <option value="10">10页</option>
+            <option value="20">20页</option>
+            <option value="50">50页</option>
+          </select>
+          <div style="font-size: 12px; color: #999; margin-top: 6px;">每页获取15条评论，页数越多获取的评论越多</div>
+        </div>
+
+        <!-- 排序方式 -->
+        <div style="margin-bottom: 20px;">
+          <label style="display: block; font-size: 14px; font-weight: 500; color: #333; margin-bottom: 8px;">排序方式</label>
+          <select id="commentsSortBy" style="width: 100%; padding: 10px 12px; border: 2px solid #f0f0f0; border-radius: 8px; font-size: 14px;">
+            <option value="default" selected>默认</option>
+            <option value="like_count">点赞数量</option>
+            <option value="latest_v2">最新</option>
+          </select>
+          <div style="font-size: 12px; color: #999; margin-top: 6px;">选择评论的排序方式（默认按小红书默认排序）</div>
+        </div>
+
+        <!-- 目标表格选择 -->
+        <div style="margin-bottom: 20px;">
+          <label style="display: block; font-size: 14px; font-weight: 500; color: #333; margin-bottom: 8px;">写入评论的表格（不能与数据来源表格相同）</label>
+          <div style="display: flex; gap: 8px;">
+            <select id="commentsTargetTableSelect" style="flex: 1; min-width: 0; padding: 10px 12px; border: 2px solid #f0f0f0; border-radius: 8px; font-size: 14px;">
+              <option value="">请选择表格</option>
+            </select>
+            <button type="button" id="createNewTableForCommentsBtn" class="button button-secondary" style="white-space: nowrap; flex-shrink: 0;">新建表格</button>
+          </div>
+          <div id="commentsTargetTableWarning" style="font-size: 12px; color: #ff4d4f; margin-top: 6px; display: none;">⚠ 写入表格不能与数据来源表格相同</div>
+          <div style="font-size: 12px; color: #999; margin-top: 6px;">提示：评论将写入目标表格，每条评论一行记录，并自动创建关联字段指向来源表格的记录</div>
+        </div>
+      </div>
+
+      <!-- 悬浮在底部的获取按钮 -->
+      <div id="commentsFloatingButton" style="display: none; position: fixed; bottom: 0; left: 0; right: 0; padding: 16px 24px; background: linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255,255,255,0.95) 70%, transparent 100%); text-align: center; z-index: 100;">
+        <button id="startFetchCommentsBtn" class="button button-primary" style="padding: 14px 48px; font-size: 16px; font-weight: 600; border-radius: 50px; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+          <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="display: inline-block; vertical-align: middle; margin-right: 6px;">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+          </svg>
+          开始获取评论
+        </button>
+      </div>
+
+      <!-- 评论加载进度模态框 -->
+      <div id="commentsProgressModal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:10001; align-items:center; justify-content:center;">
+        <div style="background:white; border-radius:16px; padding:24px; max-width:700px; width:90%; max-height:90vh; overflow-y:auto; box-shadow:0 10px 40px rgba(0,0,0,0.2);">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+            <h3 style="margin:0; font-size:18px; color:#333;">评论加载进度</h3>
+            <div style="display:flex; gap:8px;">
+              <button id="commentsPauseBtn" class="button button-secondary button-small">
+                <span class="pause-icon">⏸</span>
+                <span class="play-icon" style="display:none;">▶</span>
+                <span class="btn-text">暂停</span>
+              </button>
+              <button id="stopCommentsProgressBtn" class="button button-secondary button-small" style="color:#ff4d4f; border-color:#ff4d4f;">停止</button>
+              <button id="closeCommentsProgressModalBtn" class="button button-secondary button-small">关闭</button>
+            </div>
+          </div>
+          <div style="margin-bottom:12px;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+              <span style="font-size:13px; color:#666;">总进度</span>
+              <span id="commentsProgressText" style="font-size:13px; color:#333;">0/0</span>
+            </div>
+            <div style="width:100%; height:6px; background:#f0f0f0; border-radius:3px; overflow:hidden;">
+              <div id="commentsProgressBar" style="width:0%; height:100%; background:linear-gradient(90deg, #ff2442, #ff6b6b); border-radius:3px; transition:width 0.3s;"></div>
+            </div>
+          </div>
+          <div id="commentsCurrentNoteInfo" style="font-size:13px; color:#666; margin-bottom:8px;"></div>
+          <div id="commentsProgressLogs" style="max-height:300px; overflow-y:auto; background:#f9f9f9; border-radius:8px; padding:12px; font-size:13px; line-height:1.6;">
+            <div style="color:#999;">准备开始...</div>
+          </div>
+        </div>
+      </div>
+    </div>
 
 
     <!-- Tab 5: 自动化 -->
