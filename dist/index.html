@@ -1673,7 +1673,7 @@
   </script>
   <script src="https://webapi.amap.com/maps?v=2.0&key=e3ce8a9c46647a767efedf92e0cefe23"></script>
   
-  <script type="module" crossorigin src="./assets/index.ecf7354b.js"></script>
+  <script type="module" crossorigin src="./assets/index.b64259fd.js"></script>
   <link rel="modulepreload" crossorigin href="./assets/vendor-lark.9e248cc2.js">
   <link rel="modulepreload" crossorigin href="./assets/vendor-jquery.88f4ff12.js">
   <link rel="modulepreload" crossorigin href="./assets/vendor-i18n.7cd67a60.js">
@@ -1738,10 +1738,11 @@
           </div>
 
           <!-- 操作按钮 -->
-          <div style="display: flex; gap: 8px;">
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
             <button id="rechargeDownloadsBtn" class="button button-primary button-small" style="padding: 6px 12px; font-size: 12px;" data-i18n="buttons.personalCenter">个人中心</button>
             <button id="xhsBindBtn" class="button button-secondary button-small" style="padding: 6px 12px; font-size: 12px; background: linear-gradient(135deg, #ff2442 0%, #ff6b6b 100%); color: white; border: none;">绑定账号</button>
-            <button id="switchAccountBtn" class="button button-secondary button-small" style="padding: 6px 12px; font-size: 12px;" data-i18n="buttons.clearCache">清除缓存</button>
+            <button id="switchAccountBtn" class="button button-secondary button-small" style="padding: 6px 12px; font-size: 12px;">切换账号</button>
+            <button id="logoutBtn" class="button button-secondary button-small" style="padding: 6px 12px; font-size: 12px;">退出登录</button>
           </div>
         </div>
       </div>
@@ -1752,7 +1753,25 @@
       <div class="login-status logout" id="loginStatus">
         <div class="login-status-text">
           <span id="loginStatusNotLoggedIn" data-i18n="loginStatus.notLoggedIn">未登录</span>
+          <button id="wxQrLoginBtn" class="button button-primary button-small"
+                  style="margin-left: 10px; padding: 4px 12px; font-size: 12px;"
+                  onclick="triggerLogin()">登录</button>
         </div>
+      </div>
+    </div>
+
+    <!-- 数据平台切换（全局，持久化 localStorage；不带 menu-type，不参与权限显隐） -->
+    <div id="platformSwitcher" style="margin-bottom: 16px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+      <label style="font-size: 14px; font-weight: 500; color: #333;" data-i18n="platform.label">数据平台</label>
+      <div style="display: flex; gap: 8px;">
+        <label style="display: flex; align-items: center; gap: 6px; padding: 8px 16px; border: 2px solid #ff2442; border-radius: 8px; cursor: pointer; background: #fff5f7; transition: all 0.2s;">
+          <input type="radio" name="platformSwitch" value="xhs" checked style="cursor: pointer;">
+          <span style="font-size: 14px; font-weight: 500; color: #333;" data-i18n="platform.xhs">薯版</span>
+        </label>
+        <label style="display: flex; align-items: center; gap: 6px; padding: 8px 16px; border: 2px solid #e8e8e8; border-radius: 8px; cursor: pointer; background: white; transition: all 0.2s;">
+          <input type="radio" name="platformSwitch" value="douyin" style="cursor: pointer;">
+          <span style="font-size: 14px; font-weight: 500; color: #333;" data-i18n="platform.douyin">抖版</span>
+        </label>
       </div>
     </div>
 
@@ -1823,11 +1842,11 @@
 
       <!-- 选择笔记链接列 -->
       <div style="margin-bottom: 20px;">
-        <label style="display: block; font-size: 14px; font-weight: 500; color: #333; margin-bottom: 8px;">请选择笔记链接所在列</label>
+        <label id="singleNoteColumnLabel" style="display: block; font-size: 14px; font-weight: 500; color: #333; margin-bottom: 8px;">请选择笔记链接所在列</label>
         <select id="noteIdColumnSelect" style="width: 100%; padding: 10px 12px; border: 1px solid #d9d9d9; border-radius: 6px; font-size: 14px; color: #333; background: white; cursor: pointer;" disabled>
           <option value="">请先选择表格</option>
         </select>
-        <div style="font-size: 12px; color: #999; margin-top: 6px;">提示：选择包含笔记链接的列</div>
+        <div id="singleNoteColumnHint" style="font-size: 12px; color: #999; margin-top: 6px;">提示：选择包含笔记链接的列</div>
       </div>
 
       <!-- 笔记数据获取选项 -->
@@ -1836,12 +1855,12 @@
           <!-- 获取笔记详细信息 -->
           <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
             <input type="checkbox" id="enableNoteDetail" style="width: 18px; height: 18px; cursor: pointer;" checked>
-            <span style="font-size: 14px; font-weight: 500; color: #333;">获取笔记详细信息</span>
+            <span id="enableNoteDetailText" style="font-size: 14px; font-weight: 500; color: #333;">获取笔记详细信息</span>
             <span style="font-size: 12px; color: #ff6b2e; margin-left: 2px;">消耗1算力值</span>
           </label>
 
-          <!-- 获取笔记浏览数据 -->
-          <div>
+          <!-- 获取笔记浏览数据（薯版专属：曝光分析接口无抖音端点） -->
+          <div class="xhs-only">
             <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
               <input type="checkbox" id="enableNoteExposure" style="width: 18px; height: 18px; cursor: pointer;">
               <span style="font-size: 14px; font-weight: 500; color: #333;">获取笔记浏览数据</span>
@@ -1963,8 +1982,8 @@
             </select>
           </div>
 
-          <!-- 笔记类型 -->
-          <div>
+          <!-- 笔记类型（薯版专属筛选） -->
+          <div class="xhs-only">
             <label style="display: block; font-size: 14px; font-weight: 500; color: #333; margin-bottom: 8px;" data-i18n="search.noteType">笔记类型</label>
             <select id="searchNoteType" style="width: 100%; padding: 10px 12px; border: 2px solid #f0f0f0; border-radius: 8px; font-size: 14px;">
               <option value="不限" data-i18n="search.typeAll">不限</option>
@@ -1973,8 +1992,8 @@
             </select>
           </div>
 
-          <!-- 发布时间 -->
-          <div>
+          <!-- 发布时间（薯版专属筛选） -->
+          <div class="xhs-only">
             <label style="display: block; font-size: 14px; font-weight: 500; color: #333; margin-bottom: 8px;" data-i18n="search.publishTime">发布时间</label>
             <select id="searchPublishTime" style="width: 100%; padding: 10px 12px; border: 2px solid #f0f0f0; border-radius: 8px; font-size: 14px;">
               <option value="不限" data-i18n="search.timeAll">不限</option>
@@ -2101,7 +2120,7 @@
             <span style="font-size: 14px; font-weight: 600; color: #333; margin-right: 6px;" data-i18n="search.completeData">完整数据</span>
             <span style="display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; background: #ff9800; color: white; border-radius: 50%; font-size: 12px; font-weight: bold; cursor: help; margin-left: 4px;" data-i18n="search.completeDataHelpIcon">?</span>
           </label>
-          <div style="font-size: 12px; color: #999; margin-top: 8px; margin-left: 26px;" data-i18n="search.completeDataHint">完整数据包含完整内容、话题、视频文字等，每条笔记消耗一次下载额度</div>
+          <div id="searchCompleteDataHint" style="font-size: 12px; color: #999; margin-top: 8px; margin-left: 26px;" data-i18n="search.completeDataHint">完整数据包含完整内容、话题、视频文字等，每条笔记消耗一次下载额度</div>
         </div>
 
         <!-- 表格选择 -->
@@ -2197,6 +2216,18 @@
           </div>
         </div>
 
+        <!-- 重复笔记跳过 -->
+        <div style="margin-bottom: 20px;">
+          <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+            <input type="checkbox" id="bloggerSkipDuplicate" style="width: 18px; height: 18px; cursor: pointer;">
+            <span style="font-size: 14px; font-weight: 500; color: #333;">重复笔记不添加</span>
+            <span style="font-size: 12px; color: #ff6b2e; margin-left: 2px;">仍会消耗算力值</span>
+          </label>
+          <div style="font-size: 12px; color: #999; margin-top: 6px; margin-left: 26px;">
+            勾选后已存在的笔记（按笔记ID判断）将更新其内容和数值，不会重复新增；请求照常消耗算力值
+          </div>
+        </div>
+
         <!-- 笔记浏览曝光数据选项（已绑定账号时显示） -->
         <div id="bloggerExposureDataContainer" style="margin-bottom: 20px; display: none;">
           <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
@@ -2257,7 +2288,7 @@
 
         <!-- 选择笔记链接列 -->
         <div style="margin-bottom: 20px;">
-          <label style="display: block; font-size: 14px; font-weight: 500; color: #333; margin-bottom: 8px;">请选择笔记链接所在列</label>
+          <label id="commentsColumnLabel" style="display: block; font-size: 14px; font-weight: 500; color: #333; margin-bottom: 8px;">请选择笔记链接所在列</label>
           <select id="commentsNoteIdColumnSelect" style="width: 100%; padding: 10px 12px; border: 2px solid #f0f0f0; border-radius: 8px; font-size: 14px;" disabled>
             <option value="">请先选择表格</option>
           </select>
@@ -2265,7 +2296,7 @@
 
         <!-- 数据范围 -->
         <div style="margin-bottom: 20px;">
-          <label style="display: block; font-size: 14px; font-weight: 500; color: #333; margin-bottom: 8px;">需要获取哪些笔记</label>
+          <label id="commentsDataRangeLabel" style="display: block; font-size: 14px; font-weight: 500; color: #333; margin-bottom: 8px;">需要获取哪些笔记</label>
           <div style="display: flex; flex-direction: column; gap: 12px; padding: 12px; background: #fafafa; border-radius: 6px; border: 1px solid #e8e8e8;">
             <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 8px; background: white; border-radius: 4px; border: 1px solid #d9d9d9; transition: all 0.2s;">
               <input type="radio" name="commentsDataRange" value="all" checked style="cursor: pointer;">
@@ -2296,15 +2327,15 @@
           <div style="font-size: 12px; color: #999; margin-top: 6px;">每页获取15条评论，页数越多获取的评论越多</div>
         </div>
 
-        <!-- 排序方式 -->
-        <div style="margin-bottom: 20px;">
+        <!-- 排序方式（薯版专属：抖版上游不支持排序） -->
+        <div class="xhs-only" style="margin-bottom: 20px;">
           <label style="display: block; font-size: 14px; font-weight: 500; color: #333; margin-bottom: 8px;">排序方式</label>
           <select id="commentsSortBy" style="width: 100%; padding: 10px 12px; border: 2px solid #f0f0f0; border-radius: 8px; font-size: 14px;">
             <option value="default" selected>默认</option>
             <option value="like_count">点赞数量</option>
             <option value="latest_v2">最新</option>
           </select>
-          <div style="font-size: 12px; color: #999; margin-top: 6px;">选择评论的排序方式（默认按小红书默认排序）</div>
+          <div id="commentsSortHint" style="font-size: 12px; color: #999; margin-top: 6px;">选择评论的排序方式</div>
         </div>
 
         <!-- 目标表格选择 -->
@@ -2697,6 +2728,15 @@
             <span id="rechargeEmail" style="font-size: 14px; font-weight: 600; color: #333;">未绑定</span>
             <button id="bindEmailBtn" class="button button-primary button-small" style="padding: 4px 10px; font-size: 12px; margin-left: 4px;">绑定</button>
           </div>
+          <!-- 微信绑定行 -->
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#09BB07">
+              <path d="M8.691 2C4.768 2 1.586 4.688 1.586 8c0 1.893 1.082 3.563 2.772 4.664l-.693 2.086 2.414-1.211c.72.19 1.344.38 2.064.38l.358-.018a5.03 5.03 0 01-.206-1.416c0-3.13 2.937-5.653 6.556-5.653l.344.017C14.51 4.116 11.842 2 8.691 2zM6.098 6.457a.913.913 0 110-1.826.913.913 0 010 1.826zm5.185 0a.913.913 0 110-1.826.913.913 0 010 1.826zM22.414 12.49c0-2.784-2.772-5.04-6.028-5.04-3.341 0-6.036 2.256-6.036 5.04 0 2.785 2.695 5.042 6.036 5.042.72 0 1.43-.19 2.148-.38l1.967.999-.573-1.956c1.43-1.02 2.486-2.478 2.486-3.705zm-7.997-.754a.79.79 0 110-1.578.79.79 0 010 1.578zm3.947 0a.79.79 0 110-1.578.79.79 0 010 1.578z"></path>
+            </svg>
+            <span style="font-size: 13px; color: #666;">微信:</span>
+            <span id="rechargeWechat" style="font-size: 14px; font-weight: 600; color: #333;">未绑定</span>
+            <button id="bindWechatBtn" class="button button-primary button-small" style="padding: 4px 10px; font-size: 12px; margin-left: 4px;">绑定</button>
+          </div>
           <!-- 第三行：小红书账号绑定 -->
           <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
             <svg width="16" height="16" fill="none" stroke="#ff2442" viewBox="0 0 24 24">
@@ -2938,7 +2978,7 @@
           <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
           </svg>
-          <span data-i18n="progress.title">正在提取笔记数据</span>
+          <span id="progressTitleText" data-i18n="progress.title">正在提取笔记数据</span>
         </div>
         <button id="stopProcessingBtn" class="stop-button">
           <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -3002,7 +3042,7 @@
         <div class="current-note-info" id="currentNoteInfo" style="display: none;">
           <div class="note-info-label">
             <span style="font-size: 14px;">📌</span>
-            <span data-i18n="progress.currentNote">当前笔记</span>
+            <span id="progressCurrentNoteLabel" data-i18n="progress.currentNote">当前笔记</span>
           </div>
           <div class="note-info-content" id="currentNoteTitle">-</div>
         </div>
@@ -3315,6 +3355,72 @@
             </p>
           </div>
           <button class="button button-primary" style="padding: 10px 32px;" onclick="closeXhsBindingModal()">完成</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 微信扫码登录弹窗（iframe 嵌入数据站登录页，登录成功通过 postMessage 回传 token） -->
+    <div id="wxQrModal" class="modal-overlay">
+      <div class="modal" style="position: relative; max-width: 440px; width: 94%;">
+        <button class="modal-close" onclick="closeWechatQrLogin()">&times;</button>
+        <div class="modal-header">
+          <h3 style="font-size: 18px; font-weight: 600; color: #333;">账号登录</h3>
+        </div>
+        <div style="padding: 0 4px 8px; text-align: center;">
+          <iframe id="wxQrFrame" src="about:blank" style="width: 100%; height: 500px; border: none; border-radius: 8px;"
+                  title="账号登录"></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- 微信绑定弹窗（扫码绑定到当前登录账号） -->
+    <div id="wechatBindModal" class="modal-overlay">
+      <div class="modal" style="position: relative; max-width: 440px; width: 94%;">
+        <button class="modal-close" onclick="closeWechatBindModal()">&times;</button>
+        <div class="modal-header">
+          <h3 style="font-size: 18px; font-weight: 600; color: #333;">绑定微信</h3>
+        </div>
+        <div style="padding: 8px 4px 12px; text-align: center;">
+          <iframe id="wechatBindFrame" src="about:blank" style="width: 100%; height: 420px; border: none; border-radius: 8px;"
+                  title="绑定微信"></iframe>
+          <p id="wechatBindStatus" style="font-size: 13px; color: #666; margin: 8px 0 0;">正在获取二维码…</p>
+          <p id="wechatBindResult" style="display: none; font-size: 14px; font-weight: 600; margin: 8px 0 0;"></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 通用二次确认弹窗 -->
+    <div id="appConfirmModal" class="modal-overlay">
+      <div class="modal" style="position: relative; max-width: 360px; width: 90%;">
+        <div class="modal-header">
+          <h3 id="appConfirmTitle" style="font-size: 17px; font-weight: 600; color: #333;">确认操作</h3>
+        </div>
+        <div style="padding: 4px 8px 12px; text-align: center;">
+          <p id="appConfirmText" style="font-size: 14px; color: #666; margin: 8px 0 18px; line-height: 1.6;"></p>
+          <div style="display: flex; gap: 10px;">
+            <button id="appConfirmCancelBtn" class="button button-secondary" style="flex: 1; padding: 11px;">取消</button>
+            <button id="appConfirmOkBtn" class="button button-secondary" style="flex: 1; padding: 11px; background: #ff4d4f; border: none; color: white;">确认</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 切换账号弹窗（飞书身份登录 / 微信扫码登录） -->
+    <div id="switchAccountModal" class="modal-overlay">
+      <div class="modal" style="position: relative; max-width: 420px; width: 94%;">
+        <button class="modal-close" onclick="closeSwitchAccountModal()">&times;</button>
+        <div class="modal-header">
+          <h3 style="font-size: 18px; font-weight: 600; color: #333;">切换账号</h3>
+        </div>
+        <div style="padding: 4px 8px 16px; text-align: center;">
+          <p style="font-size: 13px; color: #999; margin: 0 0 16px;">将退出当前登录账号，请选择登录方式</p>
+          <button id="switchToFeishuBtn" class="button button-primary" style="width: 100%; padding: 13px; margin-bottom: 12px; font-size: 15px;">
+            飞书账号登录
+          </button>
+          <button id="switchToWechatBtn" class="button button-primary" style="width: 100%; padding: 13px; font-size: 15px; background: linear-gradient(135deg, #09BB07 0%, #2bc940 100%); border: none;">
+            微信扫码登录
+          </button>
+          <p style="font-size: 12px; color: #999; margin: 14px 0 0;">飞书登录：老用户登录方式</p>
         </div>
       </div>
     </div>
