@@ -1673,7 +1673,7 @@
   </script>
   <script src="https://webapi.amap.com/maps?v=2.0&key=e3ce8a9c46647a767efedf92e0cefe23"></script>
   
-  <script type="module" crossorigin src="./assets/index.b64259fd.js"></script>
+  <script type="module" crossorigin src="./assets/index.1c679057.js"></script>
   <link rel="modulepreload" crossorigin href="./assets/vendor-lark.9e248cc2.js">
   <link rel="modulepreload" crossorigin href="./assets/vendor-jquery.88f4ff12.js">
   <link rel="modulepreload" crossorigin href="./assets/vendor-i18n.7cd67a60.js">
@@ -1739,6 +1739,8 @@
 
           <!-- 操作按钮 -->
           <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button id="inviteBtn" class="button button-primary button-small" style="padding: 6px 12px; font-size: 12px; background: linear-gradient(135deg, #ff9800 0%, #ffb74d 100%); border: none;" data-i18n="userInfo.invite">邀请好友</button>
+            <button id="apiKeyBtn" class="button button-secondary button-small" style="padding: 6px 12px; font-size: 12px;" data-i18n="buttons.apiKeys">API密钥</button>
             <button id="rechargeDownloadsBtn" class="button button-primary button-small" style="padding: 6px 12px; font-size: 12px;" data-i18n="buttons.personalCenter">个人中心</button>
             <button id="xhsBindBtn" class="button button-secondary button-small" style="padding: 6px 12px; font-size: 12px; background: linear-gradient(135deg, #ff2442 0%, #ff6b6b 100%); color: white; border: none;">绑定账号</button>
             <button id="switchAccountBtn" class="button button-secondary button-small" style="padding: 6px 12px; font-size: 12px;">切换账号</button>
@@ -1781,7 +1783,7 @@
         <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
         </svg>
-        <span data-i18n="tabs.singleNote">笔记</span>
+        <span id="singleNoteTabLabel" data-i18n="tabs.singleNote">笔记</span>
       </button>
       <button class="tab-button menu-type-1" data-tab="keyword-search">
         <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -3241,6 +3243,72 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 邀请好友弹窗 -->
+  <div id="inviteModal" class="modal-overlay">
+    <div class="modal" style="max-width: 460px;">
+      <button class="modal-close" id="closeInviteModalBtn">&times;</button>
+      <div class="modal-header">
+        <h2 data-i18n="invite.title">邀请好友</h2>
+      </div>
+      <div style="padding: 24px;">
+        <!-- 我的邀请码 -->
+        <div style="text-align: center; margin-bottom: 20px;">
+          <div style="font-size: 13px; color: #666; margin-bottom: 8px;" data-i18n="invite.myCode">我的邀请码</div>
+          <div id="myInviteCode" style="font-size: 28px; font-weight: 700; letter-spacing: 6px; color: #1890ff; margin-bottom: 12px;">-</div>
+          <button id="copyInviteCodeBtn" class="button button-secondary" style="padding: 6px 16px; font-size: 12px;" data-i18n="invite.copy">复制邀请码</button>
+          <div id="inviteRuleHint" style="font-size: 12px; color: #999; margin-top: 12px; line-height: 1.6;"></div>
+        </div>
+        <hr style="border: none; border-top: 1px solid #f0f0f0; margin: 16px 0;">
+
+        <!-- 绑定邀请人：未绑定状态 -->
+        <div id="inviteUnboundState">
+          <label id="inviteBindTitle" style="display: block; font-size: 14px; font-weight: 600; color: #333; margin-bottom: 8px;">填写好友的邀请码，您将得到 100 算力值</label>
+          <input type="text" id="inviteCodeInput" placeholder="请输入 5 位邀请码" maxlength="8" style="width: 100%; padding: 10px 12px; border: 1px solid #d9d9d9; border-radius: 6px; font-size: 14px; text-transform: uppercase; outline: none; transition: all 0.3s; margin-bottom: 8px;" onfocus="this.style.borderColor='#667eea'" onblur="this.style.borderColor='#d9d9d9'">
+          <button id="confirmInviteBindBtn" class="button button-primary" style="width: 100%;" data-i18n="invite.confirmBind">确认绑定</button>
+          <div style="font-size: 12px; color: #999; margin-top: 8px; text-align: center;" data-i18n="invite.bindHint">绑定后不可更改</div>
+        </div>
+
+        <!-- 绑定邀请人：已绑定状态 -->
+        <div id="inviteBoundState" style="display: none;">
+          <div style="text-align: center; padding: 8px 0;">
+            <svg width="40" height="40" fill="none" stroke="#52c41a" viewBox="0 0 24 24" style="margin-bottom: 8px;">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <p id="inviteBoundText" style="font-size: 14px; color: #333;"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- API 密钥管理弹窗 -->
+  <div id="apiKeyModal" class="modal-overlay">
+    <div class="modal" style="max-width: 520px;">
+      <button class="modal-close" id="closeApiKeyModalBtn">&times;</button>
+      <div class="modal-header">
+        <h2 data-i18n="apiKey.title">API 密钥管理</h2>
+      </div>
+      <div style="padding: 24px;">
+        <div id="newApiKeyBox" style="display: none; background: #f6ffed; border: 1px solid #b7eb8f; border-radius: 6px; padding: 12px; margin-bottom: 16px;">
+          <div style="font-size: 13px; color: #52c41a; font-weight: 600; margin-bottom: 6px;" data-i18n="apiKey.newKeyTip">新密钥（请立即复制保存）</div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div id="newApiKeyText" style="flex: 1; font-size: 12px; font-family: monospace; color: #333; word-break: break-all;"></div>
+            <button class="button button-primary button-small" style="padding: 4px 10px; font-size: 12px; flex-shrink: 0;" onclick="copyNewApiKey()" data-i18n="apiKey.copy">复制</button>
+          </div>
+        </div>
+
+        <div style="font-size: 12px; color: #999; margin-bottom: 12px; line-height: 1.6;" data-i18n="apiKey.hint">密钥用于调用数据 API（请求头 X-API-KEY），按次从数据余额计费</div>
+
+        <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+          <input type="text" id="apiKeyNameInput" placeholder="密钥名称（可选）" maxlength="30" style="flex: 1; padding: 8px 12px; border: 1px solid #d9d9d9; border-radius: 6px; font-size: 13px; outline: none; transition: all 0.3s;" onfocus="this.style.borderColor='#667eea'" onblur="this.style.borderColor='#d9d9d9'">
+          <button id="createApiKeyBtn" class="button button-primary" style="padding: 8px 16px; font-size: 13px; flex-shrink: 0;" data-i18n="apiKey.add">添加密钥</button>
+        </div>
+
+        <div id="apiKeyList"></div>
       </div>
     </div>
   </div>
